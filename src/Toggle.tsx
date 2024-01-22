@@ -1,22 +1,27 @@
-import React from 'react';
-import {Form} from 'react-bootstrap';
+import React from "react";
+import { Form } from "react-bootstrap";
 
 interface ToggleProps {
-    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-    label: string,
-    value: boolean
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  label: string;
+  value: boolean;
 }
 
-const Toggle: React.FC<ToggleProps> = ({onChange, label, value}) => {
-    return (
-        <li style={
-            {
-                listStyleType: "none"
-            }
-        }>
-            <Form.Check onChange={onChange} type="switch" label={label} checked={value}/>
-        </li>
-    )
-}
+const Toggle = ({ onChange, label, value }: ToggleProps) => {
+  return (
+    <li
+      style={{
+        listStyleType: "none",
+      }}
+    >
+      <Form.Check
+        onChange={onChange}
+        type="switch"
+        label={label}
+        checked={value}
+      />
+    </li>
+  );
+};
 
 export default Toggle;
