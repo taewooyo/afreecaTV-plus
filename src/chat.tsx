@@ -66,7 +66,7 @@ function updateCollector() {
     })
 }
 
-function filter(nickname: string, rawUserId: string, gradeImages: NodeListOf<HTMLImageElement>, grade: string): boolean {
+function filter(nickname: string, rawUserId: string, grade: string): boolean {
     let flag = 0;
     const lastIndex = rawUserId.indexOf('(');
     let userId: string;
@@ -88,28 +88,17 @@ function filter(nickname: string, rawUserId: string, gradeImages: NodeListOf<HTM
             return;
         }
     })
-    gradeImages.forEach((elem) => {
-        if (elem.alt === "BJ" && toggle.streamer) {
-            flag = 1;
-            return;
-        } else if (elem.alt === "매니저" && toggle.manager) {
-            flag = 1;
-            return;
-        } else if (elem.alt === "열혈팬" && toggle.topfan) {
-            flag = 1;
-            return;
-        } else if (elem.alt == "구독팬" && toggle.gudok) {
-            flag = 1;
-            return;
-        } else if (elem.alt == "팬클럽" && toggle.fan) {
-            flag = 1;
-            return;
-        } else if (grade == "user" && toggle.user) {
-            flag = 1;
-            return;
-        }
-    })
-    if (grade == "user" && toggle.user) {
+    if (grade == "bj" && toggle.streamer) {
+        flag = 1;
+    } else if (grade == "manager" && toggle.manager) {
+        flag = 1;
+    } else if (grade == "topfan" && toggle.topfan) {
+        flag = 1;
+    } else if (grade == "gudok" && toggle.gudok) {
+        flag = 1;
+    } else if (grade == "fan" && toggle.fan) {
+        flag = 1;
+    } else if (grade == "user" && toggle.user) {
         flag = 1;
     }
     return flag == 1;
@@ -122,12 +111,11 @@ const callback = (mutationList: MutationRecord[], observer: MutationObserver) =>
             if (node.parentNode == null) return;
             if (node.nodeName == 'DL') {
                 const aLink = (node as HTMLElement).getElementsByTagName('a');
-                const gradeImages = (node as HTMLElement).querySelectorAll('img')
                 const rawUserId = aLink[0].getAttribute('user_id');
                 const grade = aLink[0].getAttribute('grade');
                 if (rawUserId == null) return;
                 if (grade == null) return;
-                if (filter(aLink[0].innerText, rawUserId, gradeImages, grade) && filterArea != null) {
+                if (filter(aLink[0].innerText, rawUserId, grade) && filterArea != null) {
                     (filterArea as HTMLElement).appendChild(node.cloneNode(true));
                     (filterArea as HTMLElement).scrollTop = filterArea.scrollHeight;
                 }
@@ -139,16 +127,19 @@ const callback = (mutationList: MutationRecord[], observer: MutationObserver) =>
 let filterArea: HTMLDivElement;
 
 function initLocalChatContainer() {
+    const chatBox = document.getElementById('chatbox');
+    const actionbox = document.getElementById('actionbox');
+    const areaHeader = document.querySelector('.area_header');
     const chatArea = document.getElementById('chat_area')
-    if (chatArea == null) return;
+    if (chatBox == null || chatArea == null || actionbox == null || areaHeader == null) return;
     filterArea = chatArea.cloneNode() as HTMLDivElement
     const parentChat = chatArea.parentNode as Element
-    const chatHeight = ((chatArea as HTMLElement).clientHeight) - 20;
-
+    const chatHeight = ((chatBox as HTMLElement).clientHeight) - ((actionbox as HTMLElement).clientHeight - ((areaHeader as HTMLElement).clientHeight));
+    const v = chatBox?.clientHeight - actionbox?.clientHeight - areaHeader?.clientHeight;
     const container = document.createElement('div');
     container.id = 'afreeca-chat-list-container'
     container.style.setProperty('width', '100%');
-    container.style.setProperty('height', chatHeight + 'px');
+    container.style.setProperty('height', v + 'px');
     container.style.setProperty('will-change', 'scroll-position');
 
     chatArea.classList.add('live-area');
@@ -226,11 +217,15 @@ function CaptureButton() {
 const resizeObserver = new ResizeObserver(entries => {
     for (const entry of entries) {
         const currentHeight = entry.contentRect.height;
+        const actionbox = document.getElementById('actionbox');
+        const areaHeader = document.querySelector('.area_header');
+        if (actionbox == null || areaHeader == null) return;
+        const h = currentHeight - actionbox.clientHeight - areaHeader.clientHeight;
         if (previousData == null) {
-            previousData = currentHeight
+            previousData = h
             divideContainer();
-        } else if (previousData != currentHeight) {
-            previousData = currentHeight
+        } else if (previousData != h) {
+            previousData = h
             const filterArea = document.querySelector('.filter-area');
             if (filterArea == null) {
                 divideContainer();
@@ -256,7 +251,7 @@ function divideContainer() {
     const filterAreaHeightNumber = (filterArea as HTMLElement).style.height.substring(0, index);
     const filterAreaHeight = 100 - Number(filterAreaHeightNumber);
     (liveArea as HTMLElement).style.setProperty('height', filterAreaHeight + '%');
-    (liveArea as HTMLElement).style.setProperty('top', "0px");
+    (liveArea as HTMLElement).style.setProperty('top', "-13px");
 }
 
 function restoreContainer() {
@@ -379,13 +374,17 @@ function updateContainerRatio(
 const qwer = new ResizeObserver(entries => {
     for (const entry of entries) {
         const currentHeight = entry.contentRect.height;
+        const actionbox = document.getElementById('actionbox');
+        const areaHeader = document.querySelector('.area_header');
+        if (actionbox == null || areaHeader == null) return;
+        const h = currentHeight - actionbox.clientHeight - areaHeader.clientHeight;
         const container = document.getElementById('afreeca-chat-list-container');
         if (container == null) return;
         const filterArea = document.querySelector('.filter-area');
         if (filterArea == null) return;
         const liveArea = document.querySelector('.live-area');
         if (liveArea == null) return;
-        container.style.setProperty('height', currentHeight - (170) + 'px');
+        container.style.setProperty('height', h + 'px');
         if (chatCollector.isUse) {
             // if (currentHeight >= 888) {
             divideContainer();
@@ -405,4 +404,37 @@ const qwer = new ResizeObserver(entries => {
 const t = document.getElementById("chatbox");
 if (t != null) {
     qwer.observe(t);
+}
+
+const qqq = new ResizeObserver(entries => {
+    for (const entry of entries) {
+        const currentHeight = entry.contentRect.height;
+        const chatbox = document.getElementById('chatbox');
+        const actionbox = document.getElementById('actionbox');
+        const areaHeader = document.querySelector('.area_header');
+        if (chatbox == null || actionbox == null || areaHeader == null) return;
+        const h = chatbox.clientHeight - actionbox.clientHeight - areaHeader.clientHeight;
+        const container = document.getElementById('afreeca-chat-list-container');
+        if (container == null) return;
+        const filterArea = document.querySelector('.filter-area');
+        if (filterArea == null) return;
+        const liveArea = document.querySelector('.live-area');
+        if (liveArea == null) return;
+        container.style.setProperty('height', h + 'px');
+        if (chatCollector.isUse) {
+            // if (currentHeight >= 888) {
+            divideContainer();
+            const index = (filterArea as HTMLElement).style.height.indexOf('%');
+            const filterAreaHeightNumber = (filterArea as HTMLElement).style.height.substring(0, index);
+            const filterAreaHeight = 100 - Number(filterAreaHeightNumber);
+            (liveArea as HTMLElement).style.setProperty('height', filterAreaHeight + '%');
+        } else {
+            restoreContainer();
+        }
+    }
+});
+
+const tt = document.getElementById("actionbox");
+if (tt != null) {
+    qqq.observe(tt);
 }
