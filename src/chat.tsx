@@ -135,7 +135,7 @@ function initLocalChatContainer() {
     filterArea = chatArea.cloneNode() as HTMLDivElement
     const parentChat = chatArea.parentNode as Element
     const chatHeight = ((chatBox as HTMLElement).clientHeight) - ((actionbox as HTMLElement).clientHeight - ((areaHeader as HTMLElement).clientHeight));
-    const v = chatBox?.clientHeight - actionbox?.clientHeight - areaHeader?.clientHeight;
+    const v = chatBox?.clientHeight - actionbox?.clientHeight - areaHeader?.clientHeight - 20;
     const container = document.createElement('div');
     container.id = 'afreeca-chat-list-container'
     container.style.setProperty('width', '100%');
@@ -220,7 +220,7 @@ const resizeObserver = new ResizeObserver(entries => {
         const actionbox = document.getElementById('actionbox');
         const areaHeader = document.querySelector('.area_header');
         if (actionbox == null || areaHeader == null) return;
-        const h = currentHeight - actionbox.clientHeight - areaHeader.clientHeight;
+        const h = currentHeight - actionbox.clientHeight - areaHeader.clientHeight - 20;
         if (previousData == null) {
             previousData = h
             divideContainer();
@@ -251,7 +251,7 @@ function divideContainer() {
     const filterAreaHeightNumber = (filterArea as HTMLElement).style.height.substring(0, index);
     const filterAreaHeight = 100 - Number(filterAreaHeightNumber);
     (liveArea as HTMLElement).style.setProperty('height', filterAreaHeight + '%');
-    (liveArea as HTMLElement).style.setProperty('top', "-13px");
+    (liveArea as HTMLElement).style.setProperty('top', "0px");
 }
 
 function restoreContainer() {
@@ -377,7 +377,7 @@ const qwer = new ResizeObserver(entries => {
         const actionbox = document.getElementById('actionbox');
         const areaHeader = document.querySelector('.area_header');
         if (actionbox == null || areaHeader == null) return;
-        const h = currentHeight - actionbox.clientHeight - areaHeader.clientHeight;
+        const h = currentHeight - actionbox.clientHeight - areaHeader.clientHeight - 20;
         const container = document.getElementById('afreeca-chat-list-container');
         if (container == null) return;
         const filterArea = document.querySelector('.filter-area');
@@ -413,7 +413,7 @@ const qqq = new ResizeObserver(entries => {
         const actionbox = document.getElementById('actionbox');
         const areaHeader = document.querySelector('.area_header');
         if (chatbox == null || actionbox == null || areaHeader == null) return;
-        const h = chatbox.clientHeight - actionbox.clientHeight - areaHeader.clientHeight;
+        const h = chatbox.clientHeight - actionbox.clientHeight - areaHeader.clientHeight - 20;
         const container = document.getElementById('afreeca-chat-list-container');
         if (container == null) return;
         const filterArea = document.querySelector('.filter-area');
