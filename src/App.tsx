@@ -5,6 +5,14 @@ import { User } from "./model/User";
 import Id from "./components/Id";
 import { ToggleData } from "@/src/model/ToggleData";
 import { ChatCollectorData } from "@/src/model/ChatCollectorData";
+import {
+  AppBody,
+  AppContainer,
+  AppHeader,
+  Button,
+  Input,
+  ToggleList,
+} from "./style";
 
 export default function App(props: {
   nicks: User[];
@@ -142,28 +150,12 @@ export default function App(props: {
   };
 
   return (
-    <div
-      className="wrapper"
-      style={{
-        width: "360px",
-        height: "500px",
-        overflow: "scroll",
-        textAlign: "center",
-        backgroundColor: "#0a3eb1",
-        color: "white",
-      }}
-    >
-      <header
-        className="header"
-        style={{
-          padding: "20px 20px",
-          fontSize: "1.5rem",
-        }}
-      >
+    <AppContainer className="wrapper">
+      <AppHeader className="header">
         <span>아프리카티비 플러스</span>
-      </header>
-      <div>
-        <ul>
+      </AppHeader>
+      <AppBody>
+        <ToggleList>
           <Toggle
             onChange={() => changeCollector()}
             label="채팅 콜렉터"
@@ -199,59 +191,29 @@ export default function App(props: {
             label="일반유저"
             value={toggle.user}
           />
-        </ul>
-        <input
+        </ToggleList>
+        <Input
           ref={nickInput}
           id="nickname-input"
           type="text"
           placeholder="닉네임을 입력하세요"
           onKeyUp={addNickEnterClick}
-          style={{
-            width: "250px",
-            marginBottom: "5px",
-          }}
         />
         <br />
-        <button
-          onClick={addNickBtnClick}
-          id="add-btn"
-          style={{
-            border: "0",
-            marginLeft: "5px",
-            marginBottom: "5px",
-            backgroundColor: "#c23d86",
-            color: "white",
-            borderRadius: "8px",
-          }}
-        >
+        <Button onClick={addNickBtnClick} id="add-btn">
           닉네임 추가하기
-        </button>
-        <input
+        </Button>
+        <Input
           ref={idInput}
           id="id-input"
           type="text"
           placeholder="아이디를 입력하세요"
           onKeyUp={addIdEnterClick}
-          style={{
-            width: "250px",
-            marginBottom: "5px",
-          }}
         />
         <br />
-        <button
-          onClick={addIdBtnClick}
-          id="add-btn"
-          style={{
-            border: "0",
-            marginLeft: "5px",
-            marginBottom: "5px",
-            backgroundColor: "#c23d86",
-            color: "white",
-            borderRadius: "8px",
-          }}
-        >
+        <Button onClick={addIdBtnClick} id="add-btn">
           아이디 추가하기
-        </button>
+        </Button>
         <div className="nickname-container">
           <div className="nicknames">
             <Nickname nick={nicks} onClick={nicknameClick}>
@@ -263,7 +225,7 @@ export default function App(props: {
             <Id userId={ids} onClick={idClick}></Id>
           </div>
         </div>
-      </div>
-    </div>
+      </AppBody>
+    </AppContainer>
   );
 }
