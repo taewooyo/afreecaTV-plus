@@ -1,4 +1,4 @@
-import { User } from "./model/User";
+import { User } from "../model/User";
 import { ToggleData } from "@/src/model/ToggleData";
 import { ChatCollectorData } from "@/src/model/ChatCollectorData";
 

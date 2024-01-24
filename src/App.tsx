@@ -2,7 +2,7 @@ import React, { useRef, useState } from "react";
 import Nickname from "./components/Nickname";
 import Toggle from "./components/Toggle";
 import { User } from "./model/User";
-import Id from "./Id";
+import Id from "./components/Id";
 import { ToggleData } from "@/src/model/ToggleData";
 import { ChatCollectorData } from "@/src/model/ChatCollectorData";
 
