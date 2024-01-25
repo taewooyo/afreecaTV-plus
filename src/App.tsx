@@ -1,21 +1,25 @@
 import React, {useRef, useState} from "react";
 import Nickname from "./components/Nickname";
 import Toggle from "./components/Toggle";
+import Channel from "./components/favoriteChannel"
 import {User} from "./model/User";
 import Id from "./Id";
 import {ToggleData} from "@/src/model/ToggleData";
 import {ChatCollectorData} from "@/src/model/ChatCollectorData";
+import {FavoriteChannelData} from "@/src/model/FavoriteChannelData";
 
 export default function App(props: {
     nicks: User[];
     ids: User[];
     toggle: ToggleData;
     collector: ChatCollectorData;
+    favoriteChannel: FavoriteChannelData[],
 }) {
     const [nicks, setNicks] = useState(props.nicks);
     const [ids, setIds] = useState(props.ids);
     const [toggle, setToggle] = useState(props.toggle);
     const [collector, setCollector] = useState(props.collector);
+    const [favoriteChannels, setFavoriteChannels] = useState(props.favoriteChannel)
     const nickInput = useRef<HTMLInputElement>(null);
     const idInput = useRef<HTMLInputElement>(null);
 
@@ -149,6 +153,14 @@ export default function App(props: {
         window.open("https://github.com/taewooyo/afreecaTV-plus/issues", "_blank")
     }
 
+    const onClickChannel = (e: React.MouseEvent<HTMLDivElement>, url: string) => {
+        window.open(url, "_blank")
+    }
+
+    const onClickLogin = () => {
+        window.open("https://login.afreecatv.com/afreeca/login.php", "_blank")
+    }
+
     return (
         <div
             className="wrapper"
@@ -156,63 +168,62 @@ export default function App(props: {
                 textAlign: "center",
                 color: "white",
                 padding: "2rem",
-                minWidth: "23rem"
+                minWidth: "50rem",
+                display: "flex",
+                justifyContent: "start",
             }}
         >
-            <header
-                className="header"
-                style={{
-                    fontSize: "1.5rem",
-                    fontWeight: "bold",
-                    marginBottom: "10px",
-                }}
-            >
-                <span>AfreecaTV Plus</span>
-            </header>
-            <div style={{
-                display: "flex",
-                justifyContent: "center",
-                marginBottom: "10px"
-            }}>
-                <button
-                    onClick={onClickHome}
-                    id="go-home"
+            <div>
+                <header
+                    className="header"
                     style={{
-                        marginLeft: "5px",
-                        color: "#000",
-                        background: "linear-gradient(#C6F40AFF, #EDE80CFF)",
-                        borderRadius: "15px",
-                        border: "none",
-                        padding: "0.5rem 1rem",
-                        fontSize: ".875rem",
-                        fontWeight: "700",
-                        textDecoration: "auto",
-                        cursor: "pointer"
+                        fontSize: "1.5rem",
+                        fontWeight: "bold",
+                        marginBottom: "10px",
                     }}
-                >아프리카티비 이동하기
-                </button>
-                <button
-                    onClick={onClickIssue}
-                    id="go-issue"
-                    style={{
-                        marginLeft: "5px",
-                        color: "#000",
-                        background: "linear-gradient(#C6F40AFF, #EDE80CFF)",
-                        borderRadius: "15px",
-                        border: "none",
-                        padding: "0.5rem 1rem",
-                        fontSize: ".875rem",
-                        fontWeight: "700",
-                        textDecoration: "auto",
-                        cursor: "pointer"
-                    }}
-                >버그 제보
-                </button>
-            </div>
-            <div style={{
-                display: "flex",
-                justifyContent: "center",
-            }}>
+                >
+                    <span>AfreecaTV Plus</span>
+                </header>
+                <div style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    marginBottom: "10px"
+                }}>
+                    <button
+                        onClick={onClickHome}
+                        id="go-home"
+                        style={{
+                            marginLeft: "5px",
+                            color: "#000",
+                            background: "linear-gradient(#C6F40AFF, #EDE80CFF)",
+                            borderRadius: "15px",
+                            border: "none",
+                            padding: "0.5rem 1rem",
+                            fontSize: ".875rem",
+                            fontWeight: "700",
+                            textDecoration: "auto",
+                            cursor: "pointer"
+                        }}
+                    >아프리카티비 이동하기
+                    </button>
+                    <button
+                        onClick={onClickIssue}
+                        id="go-issue"
+                        style={{
+                            marginLeft: "5px",
+                            color: "#000",
+                            background: "linear-gradient(#C6F40AFF, #EDE80CFF)",
+                            borderRadius: "15px",
+                            border: "none",
+                            padding: "0.5rem 1rem",
+                            fontSize: ".875rem",
+                            fontWeight: "700",
+                            textDecoration: "auto",
+                            cursor: "pointer"
+                        }}
+                    >버그 제보
+                    </button>
+                </div>
                 <div>
                     <ul>
                         <Toggle
@@ -358,9 +369,36 @@ export default function App(props: {
                         </div>
                     </div>
                 </div>
-                <div>
-                    {/*<h1>hahaha</h1>*/}
-                </div>
+            </div>
+            <div style={
+                {
+                    marginLeft: "10px"
+                }
+            }>
+                {favoriteChannels.length > 0 ? (
+                    <Channel
+                        channels={favoriteChannels}
+                        onClick={(e, url) => onClickChannel(e, url)}
+                    />
+                ) : (
+                    <button
+                        onClick={onClickLogin}
+                        style={{
+                            marginLeft: "5px",
+                            color: "#000",
+                            background: "linear-gradient(#C6F40AFF, #EDE80CFF)",
+                            borderRadius: "15px",
+                            border: "none",
+                            padding: "0.5rem 1rem",
+                            fontSize: ".875rem",
+                            fontWeight: "700",
+                            textDecoration: "auto",
+                            cursor: "pointer"
+                        }}
+                    >
+                        실시간으로 변경되는 즐겨찾기 리스트를 보기 위해서 로그인이 필요합니다.
+                    </button>
+                )}
             </div>
         </div>
     );
