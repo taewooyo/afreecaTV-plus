@@ -9,6 +9,7 @@ let ids: User[] = [];
 let toggle: ToggleData;
 let chatCollector: ChatCollectorData;
 let previousData: number | null
+let collectorChangeFlag = false
 
 function updateNickname() {
     chrome.storage.local.get('nicks').then((res: { [p: string]: User[] }) => {
@@ -214,6 +215,60 @@ function CaptureButton() {
     playerItemListUL?.appendChild(li);
 }
 
+function CollectorChange() {
+    const playerItemList = document.querySelector('.player_item_list');
+    const playerItemListUL = playerItemList?.querySelector('ul');
+    const li = document.createElement('li')
+    li.classList.add('share');
+    const tooltip = document.createElement('div');
+    tooltip.classList.add('sub_tooltip')
+    tooltip.innerText = "콜렉터 상하변경"
+    tooltip.style.setProperty('transform', 'translate(-80%, 0)');
+    const span = document.createElement('span')
+    span.innerText = "콜렉터 상하변경";
+
+    const collectorChangeButton = document.createElement('button');
+    collectorChangeButton.addEventListener('click', (e) => {
+        e.preventDefault()
+        try {
+            const chatContainer = document.getElementById('afreeca-chat-list-container')
+            if (chatContainer == null) return;
+
+            const filterElement = document.querySelector('.filter-area')
+            const liveElement = document.querySelector('.live-area')
+            const handler = document.getElementById('handle-container')
+
+            if (filterElement && liveElement) {
+                if (!collectorChangeFlag) {
+                    collectorChangeFlag = true;
+                    chatContainer.insertBefore(liveElement, handler);
+                    chatContainer.insertBefore(filterElement, null);
+                } else {
+                    collectorChangeFlag = false;
+                    chatContainer.insertBefore(filterElement, handler);
+                    chatContainer.insertBefore(liveElement, null);
+                }
+            }
+        } catch (err) {
+        }
+    });
+    collectorChangeButton.style.setProperty('width', '21px');
+    collectorChangeButton.style.setProperty('height', '21px');
+    collectorChangeButton.innerHTML =
+        "<svg id=\"Layer_1\" style=\"enable-background:new 0 0 120 120;\" version=\"1.1\" viewBox=\"0 0 120 120\" xml:space=\"preserve\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\"><style type=\"text/css\">\n" +
+        "\t.st0{fill:none;}\n" +
+        "\t.st1{fill:#386BFF;}\n" +
+        "\t.st2{fill:#5DE88B;}\n" +
+        "</style><line class=\"st0\" x1=\"60\" x2=\"60\" y1=\"-67.7\" y2=\"-73.2\"/><g><path class=\"st1\" d=\"M55.4,46.1L37.3,21.5c-1.2-1.6-3.6-1.6-4.7,0L14.4,46.1c-1.4,1.9,0,4.7,2.4,4.7h8.3v46c0,1.6,1.3,2.9,2.9,2.9   h13.8c1.6,0,2.9-1.3,2.9-2.9v-46H53C55.4,50.8,56.8,48.1,55.4,46.1z\"/><path class=\"st2\" d=\"M105.6,73.9L87.5,98.5c-1.2,1.6-3.6,1.6-4.7,0L64.6,73.9c-1.4-1.9,0-4.7,2.4-4.7h8.2v-46   c0-1.6,1.3-2.9,2.9-2.9H92c1.6,0,2.9,1.3,2.9,2.9v46h8.3C105.6,69.2,107,71.9,105.6,73.9z\"/></g></svg>"
+    const updatedSvg = collectorChangeButton.querySelector('svg')
+    if (updatedSvg == null) return;
+    updatedSvg.style.setProperty('vertical-align', 'middle');
+    collectorChangeButton.appendChild(span);
+    li.appendChild(collectorChangeButton);
+    li.appendChild(tooltip);
+    playerItemListUL?.appendChild(li);
+}
+
 const resizeObserver = new ResizeObserver(entries => {
     for (const entry of entries) {
         const currentHeight = entry.contentRect.height;
@@ -284,6 +339,7 @@ window.addEventListener('load', () => {
         resizeObserver.observe(t);
     }
     CaptureButton();
+    CollectorChange();
     const observer = new MutationObserver(callback);
     if (chatArea) {
         observer.observe((chatArea as Node), config)
@@ -310,8 +366,15 @@ const startDrag = function (e: MouseEvent | TouchEvent) {
     e.preventDefault();
 
     if (!filterArea) return;
-    filterArea.classList.add("freeze");
-    position = getPosition(filterArea);
+    if (!collectorChangeFlag) {
+        filterArea.classList.add("freeze");
+        position = getPosition(filterArea);
+    } else {
+        const liveArea = document.querySelector('.live-area') as HTMLDivElement;
+        if (liveArea == null) return;
+        liveArea.classList.add("freeze");
+        position = getPosition(liveArea);
+    }
 
     window.addEventListener("mousemove", doDrag);
     window.addEventListener("touchmove", doDrag);
@@ -336,7 +399,14 @@ const doDrag = (e: MouseEvent | TouchEvent) => {
 };
 
 const endDrag = function () {
-    filterArea.classList.remove("freeze");
+    if (!collectorChangeFlag) {
+        filterArea.classList.remove("freeze");
+    }
+    else {
+        const liveArea = document.querySelector('.live-area') as HTMLDivElement;
+        if (liveArea == null) return;
+        liveArea.classList.remove("freeze");
+    }
 
     chrome.storage.local.set({containerRatio});
     window.removeEventListener("mousemove", doDrag);
@@ -363,12 +433,22 @@ function updateContainerRatio(
         [orig_size, clone_size] = [clone_size, orig_size];
     }
 
-    const orig = document.querySelector(".live-area");
-    const clone = document.querySelector(".filter-area");
-    if (!orig || !clone) return;
+    if (!collectorChangeFlag) {
+        const orig = document.querySelector(".live-area");
+        const clone = document.querySelector(".filter-area");
+        if (!orig || !clone) return;
 
-    (orig as HTMLDivElement).style.height = `${orig_size * 100}%`;
-    (clone as HTMLDivElement).style.height = `${clone_size * 100}%`;
+        (orig as HTMLDivElement).style.height = `${orig_size * 100}%`;
+        (clone as HTMLDivElement).style.height = `${clone_size * 100}%`;
+    }
+    else {
+        const orig = document.querySelector(".filter-area");
+        const clone = document.querySelector(".live-area");
+        if (!orig || !clone) return;
+
+        (orig as HTMLDivElement).style.height = `${orig_size * 100}%`;
+        (clone as HTMLDivElement).style.height = `${clone_size * 100}%`;
+    }
 }
 
 const qwer = new ResizeObserver(entries => {

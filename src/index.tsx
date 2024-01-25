@@ -20,7 +20,7 @@ import {FavoriteChannelData} from "@/src/model/FavoriteChannelData";
     }
 })();
 
-//
+
 // async function getFavoriteChannel() {
 //
 //     const response = await fetch('https://myapi.afreecatv.com/api/favorite')
@@ -40,7 +40,7 @@ import {FavoriteChannelData} from "@/src/model/FavoriteChannelData";
 //     } else if (hasNonEmptyBroadInfo) {
 //         data.forEach(item => {
 //             if (item.broad_info.length !== 0) {
-//
+//                 console.log(item)
 //             }
 //         })
 //     }
