@@ -1,29 +1,27 @@
 import React, { useRef, useState } from "react";
 import Nickname from "./components/Nickname";
 import Toggle from "./components/Toggle";
+import Channel from "./components/favoriteChannel";
 import { User } from "./model/User";
 import Id from "./components/Id";
 import { ToggleData } from "@/src/model/ToggleData";
 import { ChatCollectorData } from "@/src/model/ChatCollectorData";
-import {
-  AppBody,
-  AppContainer,
-  AppHeader,
-  Button,
-  Input,
-  ToggleList,
-} from "./style";
+import { FavoriteChannelData } from "@/src/model/FavoriteChannelData";
 
 export default function App(props: {
   nicks: User[];
   ids: User[];
   toggle: ToggleData;
   collector: ChatCollectorData;
+  favoriteChannel: FavoriteChannelData[];
 }) {
   const [nicks, setNicks] = useState(props.nicks);
   const [ids, setIds] = useState(props.ids);
   const [toggle, setToggle] = useState(props.toggle);
   const [collector, setCollector] = useState(props.collector);
+  const [favoriteChannels, setFavoriteChannels] = useState(
+    props.favoriteChannel
+  );
   const nickInput = useRef<HTMLInputElement>(null);
   const idInput = useRef<HTMLInputElement>(null);
 
@@ -149,13 +147,45 @@ export default function App(props: {
     });
   };
 
+  const onClickHome = () => {
+    window.open("https://afreecatv.com", "_blank");
+  };
+
+  const onClickIssue = () => {
+    window.open("https://github.com/taewooyo/afreecaTV-plus/issues", "_blank");
+  };
+
+  const onClickChannel = (e: React.MouseEvent<HTMLDivElement>, url: string) => {
+    window.open(url, "_blank");
+  };
+
+  const onClickLogin = () => {
+    window.open("https://login.afreecatv.com/afreeca/login.php", "_blank");
+  };
+
   return (
-    <AppContainer className="wrapper">
-      <AppHeader className="header">
+    <div
+      className="wrapper"
+      style={{
+        width: "360px",
+        height: "500px",
+        overflow: "scroll",
+        textAlign: "center",
+        backgroundColor: "#0a3eb1",
+        color: "white",
+      }}
+    >
+      <header
+        className="header"
+        style={{
+          padding: "20px 20px",
+          fontSize: "1.5rem",
+        }}
+      >
         <span>아프리카티비 플러스</span>
-      </AppHeader>
-      <AppBody>
-        <ToggleList>
+      </header>
+      <div>
+        <ul>
           <Toggle
             onChange={() => changeCollector()}
             label="채팅 콜렉터"
@@ -191,29 +221,59 @@ export default function App(props: {
             label="일반유저"
             value={toggle.user}
           />
-        </ToggleList>
-        <Input
+        </ul>
+        <input
           ref={nickInput}
           id="nickname-input"
           type="text"
           placeholder="닉네임을 입력하세요"
           onKeyUp={addNickEnterClick}
+          style={{
+            width: "250px",
+            marginBottom: "5px",
+          }}
         />
         <br />
-        <Button onClick={addNickBtnClick} id="add-btn">
+        <button
+          onClick={addNickBtnClick}
+          id="add-btn"
+          style={{
+            border: "0",
+            marginLeft: "5px",
+            marginBottom: "5px",
+            backgroundColor: "#c23d86",
+            color: "white",
+            borderRadius: "8px",
+          }}
+        >
           닉네임 추가하기
-        </Button>
-        <Input
+        </button>
+        <input
           ref={idInput}
           id="id-input"
           type="text"
           placeholder="아이디를 입력하세요"
           onKeyUp={addIdEnterClick}
+          style={{
+            width: "250px",
+            marginBottom: "5px",
+          }}
         />
         <br />
-        <Button onClick={addIdBtnClick} id="add-btn">
+        <button
+          onClick={addIdBtnClick}
+          id="add-btn"
+          style={{
+            border: "0",
+            marginLeft: "5px",
+            marginBottom: "5px",
+            backgroundColor: "#c23d86",
+            color: "white",
+            borderRadius: "8px",
+          }}
+        >
           아이디 추가하기
-        </Button>
+        </button>
         <div className="nickname-container">
           <div className="nicknames">
             <Nickname nick={nicks} onClick={nicknameClick}>
@@ -225,7 +285,7 @@ export default function App(props: {
             <Id userId={ids} onClick={idClick}></Id>
           </div>
         </div>
-      </AppBody>
-    </AppContainer>
+      </div>
+    </div>
   );
 }

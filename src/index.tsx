@@ -19,34 +19,41 @@ import { FavoriteChannelData } from "@/src/model/FavoriteChannelData";
     const ids = await getIds();
     const toggle = await getToggle();
     const collector = await getCollector();
+    const favoriteChannel = await getFavoriteChannel();
     root.render(
-      <App nicks={nicks} ids={ids} toggle={toggle} collector={collector} />
+      <App
+        nicks={nicks}
+        ids={ids}
+        toggle={toggle}
+        collector={collector}
+        favoriteChannel={favoriteChannel}
+      />
     );
   } catch (e) {}
 })();
 
-//
-// async function getFavoriteChannel() {
-//
-//     const response = await fetch('https://myapi.afreecatv.com/api/favorite')
-//     const json = await response.json()
-//     const data: FavoriteChannelData[] = json.data
-//
-//     let hasNonEmptyBroadInfo = false;
-//     for (const item of data) {
-//         if (item.broad_info.length > 0) {
-//             hasNonEmptyBroadInfo = true;
-//             break;
-//         }
-//     }
-//
-//     if (data.length == 0) {
-//
-//     } else if (hasNonEmptyBroadInfo) {
-//         data.forEach(item => {
-//             if (item.broad_info.length !== 0) {
-//
-//             }
-//         })
-//     }
-// }
+async function getFavoriteChannel() {
+  const response = await fetch("https://myapi.afreecatv.com/api/favorite");
+  const json = await response.json();
+  const data: FavoriteChannelData[] = json.data;
+  if (data == undefined) return [];
+  let hasNonEmptyBroadInfo = false;
+  for (const item of data) {
+    if (item.broad_info.length > 0) {
+      hasNonEmptyBroadInfo = true;
+      break;
+    }
+  }
+
+  if (data.length == 0) {
+    return [];
+  } else if (hasNonEmptyBroadInfo) {
+    return data
+      .filter((n) => n.broad_info.length !== 0)
+      .sort(function (a, b) {
+        return b.broad_info[0].total_view_cnt - a.broad_info[0].total_view_cnt;
+      });
+  } else {
+    return [];
+  }
+}
