@@ -7,6 +7,15 @@ import Id from "./components/Id";
 import { ToggleData } from "@/src/model/ToggleData";
 import { ChatCollectorData } from "@/src/model/ChatCollectorData";
 import { FavoriteChannelData } from "@/src/model/FavoriteChannelData";
+import {
+  AppBody,
+  AppContainer,
+  AppHeader,
+  Button,
+  Input,
+  InputContainer,
+  ToggleList,
+} from "./style";
 
 export default function App(props: {
   nicks: User[];
@@ -164,128 +173,163 @@ export default function App(props: {
   };
 
   return (
-    <div
-      className="wrapper"
-      style={{
-        width: "360px",
-        height: "500px",
-        overflow: "scroll",
-        textAlign: "center",
-        backgroundColor: "#0a3eb1",
-        color: "white",
-      }}
-    >
-      <header
-        className="header"
+    <AppContainer className="wrapper">
+      <div>
+        <AppHeader className="header">
+          <span>AfreecaTV Plus</span>
+        </AppHeader>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            marginBottom: "10px",
+          }}
+        >
+          <Button onClick={onClickHome} id="go-home">
+            아프리카티비 이동하기
+          </Button>
+          <Button onClick={onClickIssue} id="go-issue">
+            버그 제보
+          </Button>
+        </div>
+        <AppBody>
+          <ToggleList>
+            <Toggle
+              onChange={() => changeCollector()}
+              label="채팅 콜렉터"
+              value={collector.isUse}
+            />
+            <Toggle
+              onChange={() => changeToggle("streamer")}
+              label="BJ"
+              value={toggle.streamer}
+            />
+            <Toggle
+              onChange={() => changeToggle("manager")}
+              label="매니저"
+              value={toggle.manager}
+            />
+            <Toggle
+              onChange={() => changeToggle("topfan")}
+              label="열혈팬"
+              value={toggle.topfan}
+            />
+            <Toggle
+              onChange={() => changeToggle("gudok")}
+              label="구독팬"
+              value={toggle.gudok}
+            />
+            <Toggle
+              onChange={() => changeToggle("fan")}
+              label="팬클럽"
+              value={toggle.fan}
+            />
+            <Toggle
+              onChange={() => changeToggle("user")}
+              label="일반유저"
+              value={toggle.user}
+            />
+          </ToggleList>
+          <InputContainer>
+            <Input
+              ref={nickInput}
+              id="nickname-input"
+              type="text"
+              placeholder="닉네임을 입력하세요"
+              onKeyUp={addNickEnterClick}
+            />
+            <Button onClick={addNickBtnClick} id="add-btn">
+              닉네임 추가
+            </Button>
+          </InputContainer>
+          <InputContainer>
+            <Input
+              ref={idInput}
+              id="id-input"
+              type="text"
+              placeholder="아이디를 입력하세요"
+              onKeyUp={addIdEnterClick}
+            />
+
+            <Button onClick={addIdBtnClick} id="add-btn">
+              아이디 추가
+            </Button>
+          </InputContainer>
+          <div className="nickname-container">
+            <div className="nicknames">
+              <Nickname nick={nicks} onClick={nicknameClick}>
+                <h2
+                  style={{
+                    color: "#fff",
+                    width: "100%",
+                    margin: "0",
+                    marginTop: "10px",
+                    marginBottom: "0.25rem",
+                    fontSize: "18px",
+                    textAlign: "start",
+                    fontWeight: "bold",
+                  }}
+                >
+                  필터링 리스트
+                </h2>
+                <p
+                  style={{
+                    margin: "0",
+                    fontSize: "14px",
+                    textAlign: "start",
+                  }}
+                >
+                  🌳 필터링 제거 방법
+                </p>
+                <p
+                  style={{
+                    margin: "0",
+                    color: "#afafaf",
+                    textAlign: "start",
+                    fontSize: "12px",
+                  }}
+                >
+                  닉네임 혹은 아이디를 클릭
+                </p>
+              </Nickname>
+            </div>
+            <div className="nicknames">
+              <Id userId={ids} onClick={idClick}></Id>
+            </div>
+          </div>
+        </AppBody>
+      </div>
+      <div
         style={{
-          padding: "20px 20px",
-          fontSize: "1.5rem",
+          marginLeft: "10px",
         }}
       >
-        <span>아프리카티비 플러스</span>
-      </header>
-      <div>
-        <ul>
-          <Toggle
-            onChange={() => changeCollector()}
-            label="채팅 콜렉터"
-            value={collector.isUse}
+        {favoriteChannels.length > 0 ? (
+          <Channel
+            channels={favoriteChannels}
+            onClick={(e, url) => onClickChannel(e, url)}
           />
-          <Toggle
-            onChange={() => changeToggle("streamer")}
-            label="BJ"
-            value={toggle.streamer}
-          />
-          <Toggle
-            onChange={() => changeToggle("manager")}
-            label="매니저"
-            value={toggle.manager}
-          />
-          <Toggle
-            onChange={() => changeToggle("topfan")}
-            label="열혈팬"
-            value={toggle.topfan}
-          />
-          <Toggle
-            onChange={() => changeToggle("gudok")}
-            label="구독팬"
-            value={toggle.gudok}
-          />
-          <Toggle
-            onChange={() => changeToggle("fan")}
-            label="팬클럽"
-            value={toggle.fan}
-          />
-          <Toggle
-            onChange={() => changeToggle("user")}
-            label="일반유저"
-            value={toggle.user}
-          />
-        </ul>
-        <input
-          ref={nickInput}
-          id="nickname-input"
-          type="text"
-          placeholder="닉네임을 입력하세요"
-          onKeyUp={addNickEnterClick}
-          style={{
-            width: "250px",
-            marginBottom: "5px",
-          }}
-        />
-        <br />
-        <button
-          onClick={addNickBtnClick}
-          id="add-btn"
-          style={{
-            border: "0",
-            marginLeft: "5px",
-            marginBottom: "5px",
-            backgroundColor: "#c23d86",
-            color: "white",
-            borderRadius: "8px",
-          }}
-        >
-          닉네임 추가하기
-        </button>
-        <input
-          ref={idInput}
-          id="id-input"
-          type="text"
-          placeholder="아이디를 입력하세요"
-          onKeyUp={addIdEnterClick}
-          style={{
-            width: "250px",
-            marginBottom: "5px",
-          }}
-        />
-        <br />
-        <button
-          onClick={addIdBtnClick}
-          id="add-btn"
-          style={{
-            border: "0",
-            marginLeft: "5px",
-            marginBottom: "5px",
-            backgroundColor: "#c23d86",
-            color: "white",
-            borderRadius: "8px",
-          }}
-        >
-          아이디 추가하기
-        </button>
-        <div className="nickname-container">
-          <div className="nicknames">
-            <Nickname nick={nicks} onClick={nicknameClick}>
-              <div>필터링에서 제거하고 싶으면</div>
-              <div>닉네임 및 아이디를 클릭하시면 됩니다.</div>
-            </Nickname>
-          </div>
-          <div className="nicknames">
-            <Id userId={ids} onClick={idClick}></Id>
-          </div>
-        </div>
+        ) : (
+          <button
+            onClick={onClickLogin}
+            style={{
+              marginLeft: "5px",
+              color: "#000",
+              background: "linear-gradient(#C6F40AFF, #EDE80CFF)",
+              borderRadius: "15px",
+              border: "none",
+              padding: "0.5rem 1rem",
+              fontSize: ".875rem",
+              fontWeight: "700",
+              textDecoration: "auto",
+              cursor: "pointer",
+            }}
+          >
+            실시간으로 변경되는 즐겨찾기 리스트를 보기 위해서 로그인이
+            필요합니다.
+          </button>
+        )}
       </div>
-    </div>
+    </AppContainer>
   );
 }

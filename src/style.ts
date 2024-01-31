@@ -1,33 +1,70 @@
 import styled from "styled-components";
 
 export const AppContainer = styled.div`
-  width: 360px;
-  height: 500px;
-  overflow: scroll;
+  min-width: 50rem;
+  display: flex;
+  justify-content: start;
+  gap: 1rem;
+  padding: 2rem;
   text-align: center;
-  background-color: #0a3eb1;
   color: white;
+`;
+
+export const ButtonContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
 `;
 
 export const AppHeader = styled.header`
-  padding: 20px 20px;
-  font-size: 1.5em;
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
 `;
 
-export const AppBody = styled.div``;
+export const AppBody = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+`;
 
 export const ToggleList = styled.ul``;
 
+export const InputContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  flex-direction: row;
+  gap: 0.5rem;
+`;
+
 export const Input = styled.input`
-  width: 250px;
-  marginbottom: 5px;
+  border: none;
+  border-radius: 15px;
+  outline: none;
+  background-color: #e9e9e9;
+  padding: 0.3rem 0.6rem;
+  font-size: 0.8rem;
+  box-sizing: border-box;
+  transition: background-color 0.3s;
+  width: 180px;
+  &:focus {
+    background-color: #fff;
+  }
+  &::placeholder {
+    color: #888;
+    opacity: 1;
+    font-size: 0.8rem;
 `;
 
 export const Button = styled.button`
-  border: 0;
-  border-radius: 8px;
   margin-left: 5px;
-  margin-bottom: 5px;
-  background-color: #c23d86;
-  color: white;
+  color: #000;
+  background: linear-gradient(#c6f40aff, #ede80cff);
+  border-radius: 15px;
+  border: none;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 700;
+  text-decoration: auto;
+  cursor: pointer;
 `;
