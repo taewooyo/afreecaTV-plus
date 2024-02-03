@@ -12,6 +12,7 @@ import {
   AppContainer,
   AppHeader,
   Button,
+  ButtonContainer,
   Input,
   InputContainer,
   ToggleList,
@@ -178,20 +179,14 @@ export default function App(props: {
         <AppHeader className="header">
           <span>AfreecaTV Plus</span>
         </AppHeader>
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            marginBottom: "10px",
-          }}
-        >
+        <ButtonContainer>
           <Button onClick={onClickHome} id="go-home">
             아프리카티비 이동하기
           </Button>
           <Button onClick={onClickIssue} id="go-issue">
             버그 제보
           </Button>
-        </div>
+        </ButtonContainer>
         <AppBody>
           <ToggleList>
             <Toggle
@@ -310,24 +305,10 @@ export default function App(props: {
             onClick={(e, url) => onClickChannel(e, url)}
           />
         ) : (
-          <button
-            onClick={onClickLogin}
-            style={{
-              marginLeft: "5px",
-              color: "#000",
-              background: "linear-gradient(#C6F40AFF, #EDE80CFF)",
-              borderRadius: "15px",
-              border: "none",
-              padding: "0.5rem 1rem",
-              fontSize: ".875rem",
-              fontWeight: "700",
-              textDecoration: "auto",
-              cursor: "pointer",
-            }}
-          >
+          <Button onClick={onClickLogin}>
             실시간으로 변경되는 즐겨찾기 리스트를 보기 위해서 로그인이
             필요합니다.
-          </button>
+          </Button>
         )}
       </div>
     </AppContainer>

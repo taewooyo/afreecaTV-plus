@@ -4,8 +4,8 @@ export const AppContainer = styled.div`
   min-width: 50rem;
   display: flex;
   justify-content: start;
-  gap: 1rem;
-  padding: 2rem;
+  gap: 0.8rem;
+  padding: 1rem;
   text-align: center;
   color: white;
 `;
@@ -13,7 +13,7 @@ export const AppContainer = styled.div`
 export const ButtonContainer = styled.div`
   display: flex;
   justify-content: center;
-  gap: 1rem;
+  gap: 0.8rem;
 `;
 
 export const AppHeader = styled.header`
@@ -25,7 +25,7 @@ export const AppHeader = styled.header`
 export const AppBody = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 0.8rem;
 `;
 
 export const ToggleList = styled.ul``;
@@ -34,7 +34,7 @@ export const InputContainer = styled.div`
   display: flex;
   justify-content: center;
   flex-direction: row;
-  gap: 0.5rem;
+  gap: 0.4rem;
 `;
 
 export const Input = styled.input`
@@ -42,11 +42,10 @@ export const Input = styled.input`
   border-radius: 15px;
   outline: none;
   background-color: #e9e9e9;
-  padding: 0.3rem 0.6rem;
+  padding: 0.4rem 0.8rem;
   font-size: 0.8rem;
-  box-sizing: border-box;
   transition: background-color 0.3s;
-  width: 180px;
+  width: 150px;
   &:focus {
     background-color: #fff;
   }
@@ -57,14 +56,15 @@ export const Input = styled.input`
 `;
 
 export const Button = styled.button`
-  margin-left: 5px;
   color: #000;
   background: linear-gradient(#c6f40aff, #ede80cff);
   border-radius: 15px;
   border: none;
-  padding: 0.5rem 1rem;
-  font-size: 0.875rem;
+  padding: 0.4rem 0.8rem;
+  font-size: 0.8rem;
   font-weight: 700;
   text-decoration: auto;
   cursor: pointer;
 `;
+
+export const H2 = styled.h2``;
