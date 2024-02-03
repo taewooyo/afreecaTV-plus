@@ -2,7 +2,7 @@ import "./chat.css";
 import { User } from "@/src/model/User";
 import { ToggleData } from "@/src/model/ToggleData";
 import { ChatCollectorData } from "@/src/model/ChatCollectorData";
-import { getCollector } from "./getStorageData";
+import { getCollector } from "./utils/getStorageData";
 
 const config = { childList: true, subtree: true };
 let nicks: User[] = [];
