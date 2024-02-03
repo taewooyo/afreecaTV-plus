@@ -2,6 +2,7 @@ import "./chat.css";
 import { User } from "@/src/model/User";
 import { ToggleData } from "@/src/model/ToggleData";
 import { ChatCollectorData } from "@/src/model/ChatCollectorData";
+import { getCollector } from "./getStorageData";
 
 const config = { childList: true, subtree: true };
 let nicks: User[] = [];
@@ -11,7 +12,7 @@ let chatCollector: ChatCollectorData;
 let previousData: number | null;
 let collectorChangeFlag = false;
 
-function updateNickname() {
+async function updateNickname() {
   chrome.storage.local.get("nicks").then((res: { [p: string]: User[] }) => {
     if (res.nicks) {
       nicks = res.nicks;
@@ -21,7 +22,7 @@ function updateNickname() {
   });
 }
 
-function updateId() {
+async function updateId() {
   chrome.storage.local.get("ids").then((res: { [p: string]: User[] }) => {
     if (res.ids) {
       ids = res.ids;
@@ -48,23 +49,21 @@ function updateToggle() {
   });
 }
 
-function updateCollector() {
-  chrome.storage.local.get("collector").then((res) => {
-    if (res.collector) {
-      chatCollector = res.collector;
-      const chatBox = document.getElementById("chatbox");
-      if (chatBox == null) return;
-      const currentHeight = chatBox.clientHeight;
-      if (chatCollector.isUse) {
-        divideContainer();
-      } else {
-        restoreContainer();
-      }
+async function updateCollector() {
+  const res = await chrome.storage.local.get("collector");
+  if (res.collector) {
+    chatCollector = res.collector;
+    const chatBox = document.getElementById("chatbox");
+    if (chatBox == null) return;
+    if (chatCollector.isUse) {
+      divideContainer();
     } else {
-      chatCollector = { isUse: false };
       restoreContainer();
     }
-  });
+  } else {
+    chatCollector = { isUse: false };
+    restoreContainer();
+  }
 }
 
 function filter(nickname: string, rawUserId: string, grade: string): boolean {
@@ -133,7 +132,7 @@ const callback = (
 
 let filterArea: HTMLDivElement;
 
-function initLocalChatContainer() {
+async function initLocalChatContainer() {
   const chatBox = document.getElementById("chatbox");
   const actionbox = document.getElementById("actionbox");
   const areaHeader = document.querySelector(".area_header");
@@ -147,10 +146,6 @@ function initLocalChatContainer() {
     return;
   filterArea = chatArea.cloneNode() as HTMLDivElement;
   const parentChat = chatArea.parentNode as Element;
-  const chatHeight =
-    (chatBox as HTMLElement).clientHeight -
-    ((actionbox as HTMLElement).clientHeight -
-      (areaHeader as HTMLElement).clientHeight);
   const v =
     chatBox?.clientHeight -
     actionbox?.clientHeight -
@@ -311,7 +306,7 @@ const resizeObserver = new ResizeObserver((entries) => {
   }
 });
 
-function divideContainer() {
+async function divideContainer() {
   const container = document.getElementById("afreeca-chat-list-container");
   if (container == null) return;
   container.style.setProperty("position", "absolute");
@@ -322,13 +317,16 @@ function divideContainer() {
   const liveArea = document.querySelector(".live-area");
   if (liveArea == null) return;
   (liveArea as HTMLElement).style.setProperty("position", "relative");
-  const index = (filterArea as HTMLElement).style.height.indexOf("%");
-  const filterAreaHeightNumber = (
-    filterArea as HTMLElement
-  ).style.height.substring(0, index);
-  const filterAreaHeight = 100 - Number(filterAreaHeightNumber);
-  (liveArea as HTMLElement).style.setProperty("height", filterAreaHeight + "%");
+  // const index = (filterArea as HTMLElement).style.height.indexOf('%');
+  // const filterAreaHeightNumber = (filterArea as HTMLElement).style.height.substring(0, index);
+  // const filterAreaHeight = 100 - Number(filterAreaHeightNumber);
+  // (liveArea as HTMLElement).style.setProperty('height', filterAreaHeight + '%');
   (liveArea as HTMLElement).style.setProperty("top", "0px");
+  const position = await chrome.storage.local.get("position");
+  const containerRatio = await chrome.storage.local.get("containerRatio");
+  if (position.position && containerRatio.containerRatio) {
+    updateContainerRatio(containerRatio.containerRatio, position.position);
+  }
 }
 
 function restoreContainer() {
@@ -348,18 +346,21 @@ function restoreContainer() {
   (liveArea as HTMLElement).style.removeProperty("top");
 }
 
-window.addEventListener("load", () => {
+window.addEventListener("load", async () => {
   chatArea = document.getElementById("chat_area");
   if (!chatArea) return;
-  initLocalChatContainer();
-  updateNickname();
-  updateId();
-  updateToggle();
-  updateCollector();
-  const t = document.getElementById("chatbox");
-  if (t != null) {
-    resizeObserver.observe(t);
-  }
+  await initLocalChatContainer();
+  await updateNickname();
+  await updateId();
+  await updateToggle();
+  chatCollector = await getCollector();
+  if (chatCollector.isUse) {
+    await divideContainer();
+  } else restoreContainer();
+  // const t = document.getElementById("chatbox");
+  // if (t != null) {
+  //     resizeObserver.observe(t);
+  // }
   CaptureButton();
   CollectorChange();
   const observer = new MutationObserver(callback);
@@ -369,11 +370,14 @@ window.addEventListener("load", () => {
   }
 });
 
-chrome.storage.local.onChanged.addListener((changes) => {
-  updateNickname();
-  updateId();
-  updateToggle();
-  updateCollector();
+chrome.storage.local.onChanged.addListener(async (changes) => {
+  await updateNickname();
+  await updateId();
+  await updateToggle();
+  chatCollector = await getCollector();
+  if (chatCollector.isUse) {
+    await divideContainer();
+  } else restoreContainer();
 });
 
 let position: string = "up";
@@ -430,7 +434,8 @@ const endDrag = function () {
     liveArea.classList.remove("freeze");
   }
 
-  chrome.storage.local.set({ containerRatio });
+  chrome.storage.local.set({ containerRatio, position });
+  // chrome.storage.local.set({position});
   window.removeEventListener("mousemove", doDrag);
   window.removeEventListener("touchmove", doDrag);
   window.removeEventListener("mouseup", endDrag);
@@ -459,6 +464,7 @@ function updateContainerRatio(ratio: number, position: string) {
 
     (orig as HTMLDivElement).style.height = `${orig_size * 100}%`;
     (clone as HTMLDivElement).style.height = `${clone_size * 100}%`;
+    // chrome.storage.local.set({filteringPercentage: clone_size * 100});
   } else {
     const orig = document.querySelector(".filter-area");
     const clone = document.querySelector(".live-area");
@@ -466,6 +472,7 @@ function updateContainerRatio(ratio: number, position: string) {
 
     (orig as HTMLDivElement).style.height = `${orig_size * 100}%`;
     (clone as HTMLDivElement).style.height = `${clone_size * 100}%`;
+    // chrome.storage.local.set({filteringPercentage: orig_size * 100});
   }
 }
 
@@ -485,7 +492,6 @@ const qwer = new ResizeObserver((entries) => {
     if (liveArea == null) return;
     container.style.setProperty("height", h + "px");
     if (chatCollector.isUse) {
-      // if (currentHeight >= 888) {
       divideContainer();
       const index = (filterArea as HTMLElement).style.height.indexOf("%");
       const filterAreaHeightNumber = (
@@ -496,9 +502,6 @@ const qwer = new ResizeObserver((entries) => {
         "height",
         filterAreaHeight + "%"
       );
-      // } else {
-      //     restoreContainer();
-      // }
     } else {
       restoreContainer();
     }
@@ -512,7 +515,6 @@ if (t != null) {
 
 const qqq = new ResizeObserver((entries) => {
   for (const entry of entries) {
-    const currentHeight = entry.contentRect.height;
     const chatbox = document.getElementById("chatbox");
     const actionbox = document.getElementById("actionbox");
     const areaHeader = document.querySelector(".area_header");
@@ -530,7 +532,6 @@ const qqq = new ResizeObserver((entries) => {
     if (liveArea == null) return;
     container.style.setProperty("height", h + "px");
     if (chatCollector.isUse) {
-      // if (currentHeight >= 888) {
       divideContainer();
       const index = (filterArea as HTMLElement).style.height.indexOf("%");
       const filterAreaHeightNumber = (
