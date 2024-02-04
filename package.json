@@ -1,6 +1,6 @@
 {
   "name": "AfreecaTV Plus",
-  "version": "1.0.13",
+  "version": "1.0.14",
   "description": "AfreecaTV Streaming Extension Service, AfreeecaTV Plus",
   "main": "index.js",
   "scripts": {

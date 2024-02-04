@@ -307,26 +307,24 @@ const resizeObserver = new ResizeObserver((entries) => {
 });
 
 async function divideContainer() {
-  const container = document.getElementById("afreeca-chat-list-container");
+  const container = document.getElementById('afreeca-chat-list-container');
   if (container == null) return;
-  container.style.setProperty("position", "absolute");
-  (filterArea as HTMLElement).style.removeProperty("display");
-  const handler = document.getElementById("handle-container");
+  container.style.setProperty('position', 'absolute');
+  (filterArea as HTMLElement).style.removeProperty('display');
+  const handler = document.getElementById('handle-container');
   if (handler == null) return;
-  handler.style.removeProperty("display");
-  const liveArea = document.querySelector(".live-area");
+  handler.style.removeProperty('display');
+  const liveArea = document.querySelector('.live-area');
   if (liveArea == null) return;
-  (liveArea as HTMLElement).style.setProperty("position", "relative");
+  (liveArea as HTMLElement).style.setProperty('position', 'relative');
   // const index = (filterArea as HTMLElement).style.height.indexOf('%');
   // const filterAreaHeightNumber = (filterArea as HTMLElement).style.height.substring(0, index);
   // const filterAreaHeight = 100 - Number(filterAreaHeightNumber);
   // (liveArea as HTMLElement).style.setProperty('height', filterAreaHeight + '%');
-  (liveArea as HTMLElement).style.setProperty("top", "0px");
-  const position = await chrome.storage.local.get("position");
-  const containerRatio = await chrome.storage.local.get("containerRatio");
-  if (position.position && containerRatio.containerRatio) {
-    updateContainerRatio(containerRatio.containerRatio, position.position);
-  }
+  (liveArea as HTMLElement).style.setProperty('top', "0px");
+  const position = await chrome.storage.local.get('position')
+  const containerRatio = await chrome.storage.local.get('containerRatio')
+  updateContainerRatio(containerRatio.containerRatio, position.position)
 }
 
 function restoreContainer() {
