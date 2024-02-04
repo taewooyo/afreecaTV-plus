@@ -1,7 +1,7 @@
 {
   "name": "AfreecaTV Plus",
   "description": "아프리카티비 스트리밍 서비스 AfreecaTV Plus",
-  "version": "1.0.13",
+  "version": "1.0.14",
   "manifest_version": 3,
   "action": {
     "default_popup": "index.html",

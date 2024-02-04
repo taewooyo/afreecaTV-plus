@@ -307,9 +307,7 @@ async function divideContainer() {
     (liveArea as HTMLElement).style.setProperty('top', "0px");
     const position = await chrome.storage.local.get('position')
     const containerRatio = await chrome.storage.local.get('containerRatio')
-    if (position.position && containerRatio.containerRatio) {
-        updateContainerRatio(containerRatio.containerRatio, position.position)
-    }
+    updateContainerRatio(containerRatio.containerRatio, position.position)
 }
 
 function restoreContainer() {
