@@ -2,7 +2,7 @@ import React from 'react';
 import App from './App';
 import {createRoot} from 'react-dom/client';
 import '../public/manifest.json';
-import {getCollector, getIds, getNicks, getToggle} from './getStorageData';
+import {getChatSetting, getCollector, getIds, getNicks, getToggle} from './getStorageData';
 import {FavoriteChannelData} from "@/src/model/FavoriteChannelData";
 
 (async () => {
@@ -15,8 +15,9 @@ import {FavoriteChannelData} from "@/src/model/FavoriteChannelData";
         const toggle = await getToggle()
         const collector = await getCollector()
         const favoriteChannel = await getFavoriteChannel()
+        const chatSetting = await getChatSetting()
         root.render(<App nicks={nicks} ids={ids} toggle={toggle} collector={collector}
-                         favoriteChannel={favoriteChannel}/>);
+                         favoriteChannel={favoriteChannel} chatSetting={chatSetting}/>);
     } catch (e) {
 
     }

@@ -2,7 +2,8 @@ import './chat.css';
 import {User} from "@/src/model/User";
 import {ToggleData} from "@/src/model/ToggleData"
 import {ChatCollectorData} from "@/src/model/ChatCollectorData";
-import {getCollector} from "./getStorageData";
+import {getChatSetting, getCollector} from "./getStorageData";
+import {ChatSetting} from "@/src/model/ChatSetting";
 
 const config = {childList: true, subtree: true};
 let nicks: User[] = [];
@@ -11,6 +12,7 @@ let toggle: ToggleData;
 let chatCollector: ChatCollectorData;
 let previousData: number | null
 let collectorChangeFlag = false
+let chatSetting: ChatSetting;
 
 async function updateNickname() {
     chrome.storage.local.get('nicks').then((res: { [p: string]: User[] }) => {
@@ -47,23 +49,6 @@ async function updateToggle() {
             }
         }
     })
-}
-
-async function updateCollector() {
-    const res = await chrome.storage.local.get('collector')
-    if (res.collector) {
-        chatCollector = res.collector;
-        const chatBox = document.getElementById('chatbox')
-        if (chatBox == null) return;
-        if (chatCollector.isUse) {
-            divideContainer();
-        } else {
-            restoreContainer();
-        }
-    } else {
-        chatCollector = {isUse: false}
-        restoreContainer();
-    }
 }
 
 function filter(nickname: string, rawUserId: string, grade: string): boolean {
@@ -109,13 +94,51 @@ const callback = (mutationList: MutationRecord[], observer: MutationObserver) =>
     mutationList.forEach((mutation: MutationRecord) => {
         mutation.addedNodes.forEach((node) => {
             if (node.parentNode == null) return;
-            if (node.nodeName == 'DL') {
-                const aLink = (node as HTMLElement).getElementsByTagName('a');
-                const rawUserId = aLink[0].getAttribute('user_id');
-                const grade = aLink[0].getAttribute('grade');
+            if (node.nodeName == 'DIV') {
+                const container = (node as HTMLElement).querySelector('.message-container')
+                if (container == null) return
+                const user = container.querySelector('.username')
+                if (user == null) return
+                const userButton = user.querySelector('button')
+                if (userButton == null) return
+                const rawUserId = userButton.getAttribute('user_id')
+                const nickName = userButton.getAttribute('user_nick')
+                const grade = userButton.getAttribute('grade')
                 if (rawUserId == null) return;
+                if (nickName == null) return;
                 if (grade == null) return;
-                if (filter(aLink[0].innerText, rawUserId, grade) && filterArea != null) {
+                const messageContainer = (node as HTMLElement).querySelector('.message-container');
+                const messageText = (node as HTMLElement).querySelector('.message-text');
+                const msg = (node as HTMLElement).querySelector('.msg');
+                const username = (node as HTMLElement).querySelector('.username');
+                if (username == null) return;
+                if (msg == null) return;
+                if (messageText == null || messageContainer == null) return;
+                if (chatSetting.isUse) {
+                    // (node as HTMLElement).style.setProperty("gap", "0 5px");
+                    // (username.firstElementChild as HTMLElement).style.setProperty('width', '130px');
+                    (username.firstElementChild as HTMLElement).style.setProperty('overflow', 'hidden');
+                    (username.firstElementChild as HTMLElement).style.setProperty('text-overflow', 'ellipsis');
+                    (username.firstElementChild as HTMLElement).style.setProperty('white-space', 'nowrap');
+                    (messageContainer as HTMLElement).style.setProperty("gap", "0 5px");
+                    (messageContainer as HTMLElement).style.setProperty("display", "flex");
+                    (username as HTMLElement).style.setProperty("flex", "0 0 8em");
+                    (username as HTMLElement).style.setProperty("width", "8em");
+                    (messageText as HTMLElement).style.setProperty("flex", "1");
+                    (msg as HTMLElement).style.setProperty("line-height", "1.3");
+
+                } else {
+                    (username.firstElementChild as HTMLElement).style.removeProperty('overflow');
+                    (username.firstElementChild as HTMLElement).style.removeProperty('text-overflow');
+                    (username.firstElementChild as HTMLElement).style.removeProperty('white-space');
+                    (messageContainer as HTMLElement).style.removeProperty("gap");
+                    (messageContainer as HTMLElement).style.removeProperty("display");
+                    (username as HTMLElement).style.removeProperty("flex");
+                    (username as HTMLElement).style.removeProperty("width");
+                    (messageText as HTMLElement).style.removeProperty("flex");
+                    (msg as HTMLElement).style.setProperty("line-height", "1.3");
+                }
+                if (filter(nickName, rawUserId, grade) && filterArea != null) {
                     (filterArea as HTMLElement).appendChild(node.cloneNode(true));
                     (filterArea as HTMLElement).scrollTop = filterArea.scrollHeight;
                 }
@@ -335,6 +358,7 @@ window.addEventListener('load', async () => {
     await updateId();
     await updateToggle();
     chatCollector = await getCollector();
+    chatSetting = await getChatSetting()
     if (chatCollector.isUse) {
         await divideContainer()
     } else restoreContainer()
@@ -357,6 +381,7 @@ chrome.storage.local.onChanged.addListener(async (changes) => {
     await updateId();
     await updateToggle();
     chatCollector = await getCollector();
+    chatSetting = await getChatSetting()
     if (chatCollector.isUse) {
         await divideContainer()
     } else restoreContainer()

@@ -7,6 +7,7 @@ import Id from "./Id";
 import {ToggleData} from "@/src/model/ToggleData";
 import {ChatCollectorData} from "@/src/model/ChatCollectorData";
 import {FavoriteChannelData} from "@/src/model/FavoriteChannelData";
+import {ChatSetting} from "@/src/model/ChatSetting";
 
 export default function App(props: {
     nicks: User[];
@@ -14,12 +15,14 @@ export default function App(props: {
     toggle: ToggleData;
     collector: ChatCollectorData;
     favoriteChannel: FavoriteChannelData[],
+    chatSetting: ChatSetting
 }) {
     const [nicks, setNicks] = useState(props.nicks);
     const [ids, setIds] = useState(props.ids);
     const [toggle, setToggle] = useState(props.toggle);
     const [collector, setCollector] = useState(props.collector);
     const [favoriteChannels, setFavoriteChannels] = useState(props.favoriteChannel)
+    const [chatSetting, setChatSetting] = useState(props.chatSetting)
     const nickInput = useRef<HTMLInputElement>(null);
     const idInput = useRef<HTMLInputElement>(null);
 
@@ -145,6 +148,13 @@ export default function App(props: {
         });
     };
 
+    const changeChatSetting = () => {
+        let newChatSetting = {isUse: !chatSetting.isUse};
+        chrome.storage.local.set({chatSetting: newChatSetting}, () => {
+            setChatSetting(newChatSetting);
+        });
+    }
+
     const onClickHome = () => {
         window.open("https://afreecatv.com", "_blank")
     }
@@ -226,6 +236,11 @@ export default function App(props: {
                 </div>
                 <div>
                     <ul>
+                        <Toggle
+                            onChange={() => changeChatSetting()}
+                            label="채팅 시작 고정"
+                            value={chatSetting.isUse}
+                        />
                         <Toggle
                             onChange={() => changeCollector()}
                             label="채팅 콜렉터"
