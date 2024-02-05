@@ -8,6 +8,7 @@ import {ToggleData} from "@/src/model/ToggleData";
 import {ChatCollectorData} from "@/src/model/ChatCollectorData";
 import {FavoriteChannelData} from "@/src/model/FavoriteChannelData";
 import {ChatSetting} from "@/src/model/ChatSetting";
+import {ChatTwoLine} from "@/src/model/ChatTwoLine";
 
 export default function App(props: {
     nicks: User[];
@@ -15,7 +16,8 @@ export default function App(props: {
     toggle: ToggleData;
     collector: ChatCollectorData;
     favoriteChannel: FavoriteChannelData[],
-    chatSetting: ChatSetting
+    chatSetting: ChatSetting,
+    chatTwoLine: ChatTwoLine
 }) {
     const [nicks, setNicks] = useState(props.nicks);
     const [ids, setIds] = useState(props.ids);
@@ -23,6 +25,7 @@ export default function App(props: {
     const [collector, setCollector] = useState(props.collector);
     const [favoriteChannels, setFavoriteChannels] = useState(props.favoriteChannel)
     const [chatSetting, setChatSetting] = useState(props.chatSetting)
+    const [chatTwoLine, setChatTwoLine] = useState(props.chatTwoLine)
     const nickInput = useRef<HTMLInputElement>(null);
     const idInput = useRef<HTMLInputElement>(null);
 
@@ -152,6 +155,15 @@ export default function App(props: {
         let newChatSetting = {isUse: !chatSetting.isUse};
         chrome.storage.local.set({chatSetting: newChatSetting}, () => {
             setChatSetting(newChatSetting);
+            if (chatTwoLine.isUse) changeChatTwoLine();
+        });
+    }
+
+    const changeChatTwoLine = () => {
+        let newChatTwoLine = {isUse: !chatTwoLine.isUse};
+        chrome.storage.local.set({chatTwoLine: newChatTwoLine}, () => {
+            setChatTwoLine(newChatTwoLine);
+            if (chatSetting.isUse) changeChatSetting();
         });
     }
 
@@ -238,8 +250,13 @@ export default function App(props: {
                     <ul>
                         <Toggle
                             onChange={() => changeChatSetting()}
-                            label="채팅 시작 고정"
+                            label="채팅 시작 정렬"
                             value={chatSetting.isUse}
+                        />
+                        <Toggle
+                            onChange={() => changeChatTwoLine()}
+                            label="채팅 두줄 보기"
+                            value={chatTwoLine.isUse}
                         />
                         <Toggle
                             onChange={() => changeCollector()}

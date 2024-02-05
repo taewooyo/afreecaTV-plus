@@ -2,6 +2,8 @@ import {User} from "./model/User";
 import {ToggleData} from "@/src/model/ToggleData";
 import {ChatCollectorData} from "@/src/model/ChatCollectorData";
 import {ChatSetting} from "@/src/model/ChatSetting";
+import {ChatTwoLine} from "@/src/model/ChatTwoLine";
+
 
 export const getNicks = async (): Promise<User[]> => {
     const res: { [p: string]: User[] } = await chrome.storage.local.get("nicks");
@@ -40,3 +42,9 @@ export const getChatSetting = async (): Promise<ChatSetting> => {
     if (res.chatSetting) return res.chatSetting;
     else return {isUse: false};
 };
+
+export const getChatTwoLine = async (): Promise<ChatTwoLine> => {
+    const res = await chrome.storage.local.get("chatTwoLine");
+    if (res.chatTwoLine) return res.chatTwoLine;
+    else return {isUse: false};
+}

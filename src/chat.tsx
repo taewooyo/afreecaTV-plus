@@ -2,8 +2,9 @@ import './chat.css';
 import {User} from "@/src/model/User";
 import {ToggleData} from "@/src/model/ToggleData"
 import {ChatCollectorData} from "@/src/model/ChatCollectorData";
-import {getChatSetting, getCollector} from "./getStorageData";
+import {getChatSetting, getChatTwoLine, getCollector} from "./getStorageData";
 import {ChatSetting} from "@/src/model/ChatSetting";
+import {ChatTwoLine} from "@/src/model/ChatTwoLine";
 
 const config = {childList: true, subtree: true};
 let nicks: User[] = [];
@@ -13,6 +14,7 @@ let chatCollector: ChatCollectorData;
 let previousData: number | null
 let collectorChangeFlag = false
 let chatSetting: ChatSetting;
+let chatTwoLine: ChatTwoLine;
 
 async function updateNickname() {
     chrome.storage.local.get('nicks').then((res: { [p: string]: User[] }) => {
@@ -114,9 +116,9 @@ const callback = (mutationList: MutationRecord[], observer: MutationObserver) =>
                 if (username == null) return;
                 if (msg == null) return;
                 if (messageText == null || messageContainer == null) return;
+                (messageContainer as HTMLElement).style.setProperty("margin", "3px 0");
+                (username as HTMLElement).style.setProperty("margin-right", "3px");
                 if (chatSetting.isUse) {
-                    // (node as HTMLElement).style.setProperty("gap", "0 5px");
-                    // (username.firstElementChild as HTMLElement).style.setProperty('width', '130px');
                     (username.firstElementChild as HTMLElement).style.setProperty('overflow', 'hidden');
                     (username.firstElementChild as HTMLElement).style.setProperty('text-overflow', 'ellipsis');
                     (username.firstElementChild as HTMLElement).style.setProperty('white-space', 'nowrap');
@@ -126,7 +128,6 @@ const callback = (mutationList: MutationRecord[], observer: MutationObserver) =>
                     (username as HTMLElement).style.setProperty("width", "8em");
                     (messageText as HTMLElement).style.setProperty("flex", "1");
                     (msg as HTMLElement).style.setProperty("line-height", "1.3");
-
                 } else {
                     (username.firstElementChild as HTMLElement).style.removeProperty('overflow');
                     (username.firstElementChild as HTMLElement).style.removeProperty('text-overflow');
@@ -137,6 +138,12 @@ const callback = (mutationList: MutationRecord[], observer: MutationObserver) =>
                     (username as HTMLElement).style.removeProperty("width");
                     (messageText as HTMLElement).style.removeProperty("flex");
                     (msg as HTMLElement).style.setProperty("line-height", "1.3");
+                }
+                if (chatTwoLine.isUse) {
+                    (messageText as HTMLElement).style.setProperty("display", "block");
+                }
+                else {
+                    (messageText as HTMLElement).style.setProperty("display", "inline");
                 }
                 if (filter(nickName, rawUserId, grade) && filterArea != null) {
                     (filterArea as HTMLElement).appendChild(node.cloneNode(true));
@@ -323,10 +330,6 @@ async function divideContainer() {
     const liveArea = document.querySelector('.live-area');
     if (liveArea == null) return;
     (liveArea as HTMLElement).style.setProperty('position', 'relative');
-    // const index = (filterArea as HTMLElement).style.height.indexOf('%');
-    // const filterAreaHeightNumber = (filterArea as HTMLElement).style.height.substring(0, index);
-    // const filterAreaHeight = 100 - Number(filterAreaHeightNumber);
-    // (liveArea as HTMLElement).style.setProperty('height', filterAreaHeight + '%');
     (liveArea as HTMLElement).style.setProperty('top', "0px");
     const position = await chrome.storage.local.get('position')
     const containerRatio = await chrome.storage.local.get('containerRatio')
@@ -358,7 +361,8 @@ window.addEventListener('load', async () => {
     await updateId();
     await updateToggle();
     chatCollector = await getCollector();
-    chatSetting = await getChatSetting()
+    chatSetting = await getChatSetting();
+    chatTwoLine = await getChatTwoLine();
     if (chatCollector.isUse) {
         await divideContainer()
     } else restoreContainer()
@@ -381,7 +385,8 @@ chrome.storage.local.onChanged.addListener(async (changes) => {
     await updateId();
     await updateToggle();
     chatCollector = await getCollector();
-    chatSetting = await getChatSetting()
+    chatSetting = await getChatSetting();
+    chatTwoLine = await getChatTwoLine();
     if (chatCollector.isUse) {
         await divideContainer()
     } else restoreContainer()
