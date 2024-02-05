@@ -19,7 +19,7 @@ export default function App(props: {
     ids: User[];
     toggle: ToggleData;
     collector: ChatCollectorData;
-    favoriteChannel: FavoriteChannelData[],
+    // favoriteChannel: FavoriteChannelData[],
     chatSetting: ChatSetting,
     chatTwoLine: ChatTwoLine,
     fanBadge: FanBadge,
@@ -31,7 +31,7 @@ export default function App(props: {
     const [ids, setIds] = useState(props.ids);
     const [toggle, setToggle] = useState(props.toggle);
     const [collector, setCollector] = useState(props.collector);
-    const [favoriteChannels, setFavoriteChannels] = useState(props.favoriteChannel)
+    // const [favoriteChannels, setFavoriteChannels] = useState(props.favoriteChannel)
     const [chatSetting, setChatSetting] = useState(props.chatSetting)
     const [chatTwoLine, setChatTwoLine] = useState(props.chatTwoLine)
     const [fanBadge, setFanBadge] = useState(props.fanBadge)
@@ -230,7 +230,7 @@ export default function App(props: {
                 textAlign: "center",
                 color: "white",
                 padding: "2rem",
-                minWidth: "50rem",
+                minWidth: "400px",
                 display: "flex",
                 justifyContent: "start",
             }}
@@ -467,30 +467,30 @@ export default function App(props: {
                     marginLeft: "10px"
                 }
             }>
-                {favoriteChannels.length > 0 ? (
-                    <Channel
-                        channels={favoriteChannels}
-                        onClick={(e, url) => onClickChannel(e, url)}
-                    />
-                ) : (
-                    <button
-                        onClick={onClickLogin}
-                        style={{
-                            marginLeft: "5px",
-                            color: "#000",
-                            background: "linear-gradient(#C6F40AFF, #EDE80CFF)",
-                            borderRadius: "15px",
-                            border: "none",
-                            padding: "0.5rem 1rem",
-                            fontSize: ".875rem",
-                            fontWeight: "700",
-                            textDecoration: "auto",
-                            cursor: "pointer"
-                        }}
-                    >
-                        실시간으로 변경되는 즐겨찾기 리스트를 보기 위해서 로그인이 필요합니다.
-                    </button>
-                )}
+                {/*{favoriteChannels.length > 0 ? (*/}
+                {/*    <Channel*/}
+                {/*        channels={favoriteChannels}*/}
+                {/*        onClick={(e, url) => onClickChannel(e, url)}*/}
+                {/*    />*/}
+                {/*) : (*/}
+                {/*    <button*/}
+                {/*        onClick={onClickLogin}*/}
+                {/*        style={{*/}
+                {/*            marginLeft: "5px",*/}
+                {/*            color: "#000",*/}
+                {/*            background: "linear-gradient(#C6F40AFF, #EDE80CFF)",*/}
+                {/*            borderRadius: "15px",*/}
+                {/*            border: "none",*/}
+                {/*            padding: "0.5rem 1rem",*/}
+                {/*            fontSize: ".875rem",*/}
+                {/*            fontWeight: "700",*/}
+                {/*            textDecoration: "auto",*/}
+                {/*            cursor: "pointer"*/}
+                {/*        }}*/}
+                {/*    >*/}
+                {/*        실시간으로 변경되는 즐겨찾기 리스트를 보기 위해서 로그인이 필요합니다.*/}
+                {/*    </button>*/}
+                {/*)}*/}
             </div>
         </div>
     );

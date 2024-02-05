@@ -23,7 +23,7 @@ import {FavoriteChannelData} from "@/src/model/FavoriteChannelData";
         const ids = await getIds()
         const toggle = await getToggle()
         const collector = await getCollector()
-        const favoriteChannel = await getFavoriteChannel()
+        // const favoriteChannel = await getFavoriteChannel()
         const chatSetting = await getChatSetting()
         const chatTwoLine = await getChatTwoLine();
         const fanBadge = await getFanBadge();
@@ -32,7 +32,7 @@ import {FavoriteChannelData} from "@/src/model/FavoriteChannelData";
         const topfanBadge = await getTopfanBadge();
         root.render(
             <App nicks={nicks} ids={ids} toggle={toggle} collector={collector}
-                 favoriteChannel={favoriteChannel} chatSetting={chatSetting} chatTwoLine={chatTwoLine}
+                 chatSetting={chatSetting} chatTwoLine={chatTwoLine}
                  fanBadge={fanBadge} subscribeBadge={subscribeBadge} supportBadge={supportBadge} topfanBadge={topfanBadge}
             />);
     } catch (e) {
