@@ -134,6 +134,7 @@ const callback = (mutationList: MutationRecord[], observer: MutationObserver) =>
                 (messageContainer as HTMLElement).style.setProperty("margin", "3px 0");
                 (username as HTMLElement).style.setProperty("margin-right", "3px");
                 if (chatSetting.isUse) {
+                    (username.firstElementChild as HTMLElement).style.setProperty('width', '105%');
                     (username.firstElementChild as HTMLElement).style.setProperty('overflow', 'hidden');
                     (username.firstElementChild as HTMLElement).style.setProperty('text-overflow', 'ellipsis');
                     (username.firstElementChild as HTMLElement).style.setProperty('white-space', 'nowrap');
@@ -144,6 +145,7 @@ const callback = (mutationList: MutationRecord[], observer: MutationObserver) =>
                     (messageText as HTMLElement).style.setProperty("flex", "1");
                     (msg as HTMLElement).style.setProperty("line-height", "1.3");
                 } else {
+                    (username.firstElementChild as HTMLElement).style.removeProperty('width');
                     (username.firstElementChild as HTMLElement).style.removeProperty('overflow');
                     (username.firstElementChild as HTMLElement).style.removeProperty('text-overflow');
                     (username.firstElementChild as HTMLElement).style.removeProperty('white-space');
