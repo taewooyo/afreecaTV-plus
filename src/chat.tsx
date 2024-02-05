@@ -2,9 +2,20 @@ import './chat.css';
 import {User} from "@/src/model/User";
 import {ToggleData} from "@/src/model/ToggleData"
 import {ChatCollectorData} from "@/src/model/ChatCollectorData";
-import {getChatSetting, getChatTwoLine, getCollector} from "./getStorageData";
+import {
+    getChatSetting,
+    getChatTwoLine,
+    getCollector,
+    getFanBadge,
+    getSubscribeBadge, getSupportBadge,
+    getTopfanBadge
+} from "./getStorageData";
 import {ChatSetting} from "@/src/model/ChatSetting";
 import {ChatTwoLine} from "@/src/model/ChatTwoLine";
+import {SubscribeBadge} from "@/src/model/SubscribeBadge";
+import {TopfanBadge} from "@/src/model/TopfanBadge";
+import {FanBadge} from "@/src/model/FanBadge";
+import {SupportBadge} from "@/src/model/SupportBadge";
 
 const config = {childList: true, subtree: true};
 let nicks: User[] = [];
@@ -15,6 +26,10 @@ let previousData: number | null
 let collectorChangeFlag = false
 let chatSetting: ChatSetting;
 let chatTwoLine: ChatTwoLine;
+let subscribeBadge: SubscribeBadge;
+let topFanBadge: TopfanBadge;
+let fanBadge: FanBadge;
+let supportBadge: SupportBadge;
 
 async function updateNickname() {
     chrome.storage.local.get('nicks').then((res: { [p: string]: User[] }) => {
@@ -145,6 +160,63 @@ const callback = (mutationList: MutationRecord[], observer: MutationObserver) =>
                 else {
                     (messageText as HTMLElement).style.setProperty("display", "inline");
                 }
+
+                // 구독자 뱃지 제거
+                if (subscribeBadge.isUse) {
+                    const thumb = (node as HTMLElement).querySelector('.thumb');
+                    if (thumb != null) {
+                        (thumb as HTMLElement).style.setProperty("display", "none");
+                    }
+                }
+                else {
+                    const thumb = (node as HTMLElement).querySelector('.thumb');
+                    if (thumb != null) {
+                        (thumb as HTMLElement).style.setProperty("display", "inline-block");
+                    }
+                }
+
+                // 열혈팬 뱃지 제거
+                if (topFanBadge.isUse) {
+                    const topFan = (node as HTMLElement).querySelector('.grade-badge-vip');
+                    if (topFan != null) {
+                        (topFan as HTMLElement).style.setProperty("display", "none");
+                    }
+                }
+                else {
+                    const topFan = (node as HTMLElement).querySelector('.grade-badge-vip');
+                    if (topFan != null) {
+                        (topFan as HTMLElement).style.removeProperty("display");
+                    }
+                }
+
+                // 팬 뱃지 제거
+                if (fanBadge.isUse) {
+                    const fan = (node as HTMLElement).querySelector('.grade-badge-fan');
+                    if (fan != null) {
+                        (fan as HTMLElement).style.setProperty("display", "none");
+                    }
+                }
+                else {
+                    const fan = (node as HTMLElement).querySelector('.grade-badge-fan');
+                    if (fan != null) {
+                        (fan as HTMLElement).style.removeProperty("display");
+                    }
+                }
+
+                // 서포터 뱃지 제거
+                if (fanBadge.isUse) {
+                    const support = (node as HTMLElement).querySelector('.grade-badge-support');
+                    if (support != null) {
+                        (support as HTMLElement).style.setProperty("display", "none");
+                    }
+                }
+                else {
+                    const support = (node as HTMLElement).querySelector('.grade-badge-support');
+                    if (support != null) {
+                        (support as HTMLElement).style.removeProperty("display");
+                    }
+                }
+
                 if (filter(nickName, rawUserId, grade) && filterArea != null) {
                     (filterArea as HTMLElement).appendChild(node.cloneNode(true));
                     (filterArea as HTMLElement).scrollTop = filterArea.scrollHeight;
@@ -363,6 +435,11 @@ window.addEventListener('load', async () => {
     chatCollector = await getCollector();
     chatSetting = await getChatSetting();
     chatTwoLine = await getChatTwoLine();
+    subscribeBadge = await getSubscribeBadge();
+    topFanBadge = await getTopfanBadge();
+    fanBadge = await getFanBadge();
+    supportBadge = await getSupportBadge();
+
     if (chatCollector.isUse) {
         await divideContainer()
     } else restoreContainer()
@@ -387,6 +464,10 @@ chrome.storage.local.onChanged.addListener(async (changes) => {
     chatCollector = await getCollector();
     chatSetting = await getChatSetting();
     chatTwoLine = await getChatTwoLine();
+    subscribeBadge = await getSubscribeBadge();
+    topFanBadge = await getTopfanBadge();
+    fanBadge = await getFanBadge();
+    supportBadge = await getSupportBadge();
     if (chatCollector.isUse) {
         await divideContainer()
     } else restoreContainer()

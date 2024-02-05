@@ -9,6 +9,10 @@ import {ChatCollectorData} from "@/src/model/ChatCollectorData";
 import {FavoriteChannelData} from "@/src/model/FavoriteChannelData";
 import {ChatSetting} from "@/src/model/ChatSetting";
 import {ChatTwoLine} from "@/src/model/ChatTwoLine";
+import {FanBadge} from "@/src/model/FanBadge";
+import {SubscribeBadge} from "@/src/model/SubscribeBadge";
+import {SupportBadge} from "@/src/model/SupportBadge";
+import {TopfanBadge} from "@/src/model/TopfanBadge";
 
 export default function App(props: {
     nicks: User[];
@@ -17,7 +21,11 @@ export default function App(props: {
     collector: ChatCollectorData;
     favoriteChannel: FavoriteChannelData[],
     chatSetting: ChatSetting,
-    chatTwoLine: ChatTwoLine
+    chatTwoLine: ChatTwoLine,
+    fanBadge: FanBadge,
+    subscribeBadge: SubscribeBadge,
+    supportBadge: SupportBadge,
+    topfanBadge: TopfanBadge
 }) {
     const [nicks, setNicks] = useState(props.nicks);
     const [ids, setIds] = useState(props.ids);
@@ -26,6 +34,10 @@ export default function App(props: {
     const [favoriteChannels, setFavoriteChannels] = useState(props.favoriteChannel)
     const [chatSetting, setChatSetting] = useState(props.chatSetting)
     const [chatTwoLine, setChatTwoLine] = useState(props.chatTwoLine)
+    const [fanBadge, setFanBadge] = useState(props.fanBadge)
+    const [subscribeBadge, setSubscribeBadage] = useState(props.subscribeBadge)
+    const [supportBadge, setSupportBadge] = useState(props.supportBadge)
+    const [topFanBadge, setTopFanBadge] = useState(props.topfanBadge)
     const nickInput = useRef<HTMLInputElement>(null);
     const idInput = useRef<HTMLInputElement>(null);
 
@@ -167,6 +179,34 @@ export default function App(props: {
         });
     }
 
+    const changeSubscribeBadge = () => {
+        let newSubscribeBadge = {isUse: !subscribeBadge.isUse};
+        chrome.storage.local.set({subscribeBadge: newSubscribeBadge}, () => {
+            setSubscribeBadage(newSubscribeBadge);
+        });
+    }
+
+    const changeTopFanBadge = () => {
+        let newTopFanBadge = {isUse: !topFanBadge.isUse};
+        chrome.storage.local.set({topFanBadge: newTopFanBadge}, () => {
+            setTopFanBadge(newTopFanBadge);
+        });
+    }
+
+    const changeFanBadge = () => {
+        let newFanBadge = {isUse: !fanBadge.isUse};
+        chrome.storage.local.set({fanBadge: newFanBadge}, () => {
+            setFanBadge(newFanBadge);
+        });
+    }
+
+    const changeSupportBadge = () => {
+        let newSupportBadge = {isUse: !supportBadge.isUse};
+        chrome.storage.local.set({supportBadge: newSupportBadge}, () => {
+            setSupportBadge(newSupportBadge);
+        });
+    }
+
     const onClickHome = () => {
         window.open("https://afreecatv.com", "_blank")
     }
@@ -257,6 +297,26 @@ export default function App(props: {
                             onChange={() => changeChatTwoLine()}
                             label="채팅 두줄 보기"
                             value={chatTwoLine.isUse}
+                        />
+                        <Toggle
+                            onChange={() => changeSubscribeBadge()}
+                            label="구독 뱃지 제거"
+                            value={subscribeBadge.isUse}
+                        />
+                        <Toggle
+                            onChange={() => changeTopFanBadge()}
+                            label="열혈팬 뱃지 제거"
+                            value={topFanBadge.isUse}
+                        />
+                        <Toggle
+                            onChange={() => changeFanBadge()}
+                            label="팬클럽 뱃지 제거"
+                            value={fanBadge.isUse}
+                        />
+                        <Toggle
+                            onChange={() => changeSupportBadge()}
+                            label="서포터 뱃지 제거"
+                            value={supportBadge.isUse}
                         />
                         <Toggle
                             onChange={() => changeCollector()}
