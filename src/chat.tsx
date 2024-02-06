@@ -5,7 +5,7 @@ import {ChatCollectorData} from "@/src/model/ChatCollectorData";
 import {
     getChatSetting,
     getChatTwoLine,
-    getCollector,
+    getCollector, getDivider,
     getFanBadge,
     getSubscribeBadge, getSupportBadge,
     getTopfanBadge
@@ -16,6 +16,7 @@ import {SubscribeBadge} from "@/src/model/SubscribeBadge";
 import {TopfanBadge} from "@/src/model/TopfanBadge";
 import {FanBadge} from "@/src/model/FanBadge";
 import {SupportBadge} from "@/src/model/SupportBadge";
+import {Divider} from "@/src/model/Divider";
 
 const config = {childList: true, subtree: true};
 let nicks: User[] = [];
@@ -30,6 +31,7 @@ let subscribeBadge: SubscribeBadge;
 let topFanBadge: TopfanBadge;
 let fanBadge: FanBadge;
 let supportBadge: SupportBadge;
+let divider: Divider;
 
 async function updateNickname() {
     chrome.storage.local.get('nicks').then((res: { [p: string]: User[] }) => {
@@ -206,7 +208,7 @@ const callback = (mutationList: MutationRecord[], observer: MutationObserver) =>
                 }
 
                 // 서포터 뱃지 제거
-                if (fanBadge.isUse) {
+                if (supportBadge.isUse) {
                     const support = (node as HTMLElement).querySelector('.grade-badge-support');
                     if (support != null) {
                         (support as HTMLElement).style.setProperty("display", "none");
@@ -216,6 +218,24 @@ const callback = (mutationList: MutationRecord[], observer: MutationObserver) =>
                     const support = (node as HTMLElement).querySelector('.grade-badge-support');
                     if (support != null) {
                         (support as HTMLElement).style.removeProperty("display");
+                    }
+                }
+
+                if (divider.isUse) {
+                    const author = (node as HTMLElement).querySelector('.author')
+                    if (author != null) {
+                        const text = (author as HTMLElement).innerText;
+                        (author as HTMLElement).innerText = text + " : ";
+                    }
+                }
+                else {
+                    const author = (node as HTMLElement).querySelector('.author')
+                    if (author != null) {
+                        const text = (author as HTMLElement).innerText;
+                        const index = text.indexOf(" : ");
+                        if (index != -1) {
+                            (author as HTMLElement).innerText = text.substring(index);
+                        }
                     }
                 }
 
@@ -441,6 +461,7 @@ window.addEventListener('load', async () => {
     topFanBadge = await getTopfanBadge();
     fanBadge = await getFanBadge();
     supportBadge = await getSupportBadge();
+    divider = await getDivider();
 
     if (chatCollector.isUse) {
         await divideContainer()
@@ -470,6 +491,7 @@ chrome.storage.local.onChanged.addListener(async (changes) => {
     topFanBadge = await getTopfanBadge();
     fanBadge = await getFanBadge();
     supportBadge = await getSupportBadge();
+    divider = await getDivider();
     if (chatCollector.isUse) {
         await divideContainer()
     } else restoreContainer()

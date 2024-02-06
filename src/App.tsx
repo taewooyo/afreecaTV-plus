@@ -1,18 +1,17 @@
 import React, {useRef, useState} from "react";
 import Nickname from "./components/Nickname";
 import Toggle from "./components/Toggle";
-import Channel from "./components/favoriteChannel"
 import {User} from "./model/User";
 import Id from "./Id";
 import {ToggleData} from "@/src/model/ToggleData";
 import {ChatCollectorData} from "@/src/model/ChatCollectorData";
-import {FavoriteChannelData} from "@/src/model/FavoriteChannelData";
 import {ChatSetting} from "@/src/model/ChatSetting";
 import {ChatTwoLine} from "@/src/model/ChatTwoLine";
 import {FanBadge} from "@/src/model/FanBadge";
 import {SubscribeBadge} from "@/src/model/SubscribeBadge";
 import {SupportBadge} from "@/src/model/SupportBadge";
 import {TopfanBadge} from "@/src/model/TopfanBadge";
+import {Divider} from "@/src/model/Divider";
 
 export default function App(props: {
     nicks: User[];
@@ -25,7 +24,8 @@ export default function App(props: {
     fanBadge: FanBadge,
     subscribeBadge: SubscribeBadge,
     supportBadge: SupportBadge,
-    topfanBadge: TopfanBadge
+    topfanBadge: TopfanBadge,
+    divider: Divider
 }) {
     const [nicks, setNicks] = useState(props.nicks);
     const [ids, setIds] = useState(props.ids);
@@ -38,6 +38,7 @@ export default function App(props: {
     const [subscribeBadge, setSubscribeBadage] = useState(props.subscribeBadge)
     const [supportBadge, setSupportBadge] = useState(props.supportBadge)
     const [topFanBadge, setTopFanBadge] = useState(props.topfanBadge)
+    const [divider, setDivider] = useState(props.divider)
     const nickInput = useRef<HTMLInputElement>(null);
     const idInput = useRef<HTMLInputElement>(null);
 
@@ -207,6 +208,13 @@ export default function App(props: {
         });
     }
 
+    const changeDivider = () => {
+        let newDivider = {isUse: !divider.isUse};
+        chrome.storage.local.set({divider: newDivider}, () => {
+            setDivider(newDivider);
+        });
+    }
+
     const onClickHome = () => {
         window.open("https://afreecatv.com", "_blank")
     }
@@ -288,6 +296,11 @@ export default function App(props: {
                 </div>
                 <div>
                     <ul>
+                        <Toggle
+                            onChange={() => changeDivider()}
+                            label="채팅 구분자"
+                            value={divider.isUse}
+                        />
                         <Toggle
                             onChange={() => changeChatSetting()}
                             label="채팅 시작 정렬"

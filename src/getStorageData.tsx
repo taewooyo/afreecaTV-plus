@@ -7,6 +7,7 @@ import {TopfanBadge} from "@/src/model/TopfanBadge";
 import {SupportBadge} from "@/src/model/SupportBadge";
 import {SubscribeBadge} from "@/src/model/SubscribeBadge";
 import {FanBadge} from "@/src/model/FanBadge";
+import {Divider} from "@/src/model/Divider";
 
 
 export const getNicks = async (): Promise<User[]> => {
@@ -74,5 +75,11 @@ export const getSupportBadge = async (): Promise<SupportBadge> => {
 export const getTopfanBadge = async (): Promise<TopfanBadge> => {
     const res = await chrome.storage.local.get("topFanBadge");
     if (res.topFanBadge) return res.topFanBadge;
+    else return {isUse: false};
+}
+
+export const getDivider = async (): Promise<Divider> => {
+    const res = await chrome.storage.local.get("divider");
+    if (res.divider) return res.divider;
     else return {isUse: false};
 }

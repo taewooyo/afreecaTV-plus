@@ -5,7 +5,7 @@ import '../public/manifest.json';
 import {
     getChatSetting,
     getChatTwoLine,
-    getCollector,
+    getCollector, getDivider,
     getFanBadge,
     getIds,
     getNicks,
@@ -30,10 +30,12 @@ import {FavoriteChannelData} from "@/src/model/FavoriteChannelData";
         const subscribeBadge = await getSubscribeBadge();
         const supportBadge = await getSupportBadge();
         const topfanBadge = await getTopfanBadge();
+        const divider = await getDivider();
         root.render(
             <App nicks={nicks} ids={ids} toggle={toggle} collector={collector}
                  chatSetting={chatSetting} chatTwoLine={chatTwoLine}
                  fanBadge={fanBadge} subscribeBadge={subscribeBadge} supportBadge={supportBadge} topfanBadge={topfanBadge}
+                 divider={divider}
             />);
     } catch (e) {
 
