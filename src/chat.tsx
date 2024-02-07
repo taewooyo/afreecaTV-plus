@@ -133,8 +133,6 @@ const callback = (mutationList: MutationRecord[], observer: MutationObserver) =>
                 if (username == null) return;
                 if (msg == null) return;
                 if (messageText == null || messageContainer == null) return;
-                (messageContainer as HTMLElement).style.setProperty("margin", "3px 0");
-                (username as HTMLElement).style.setProperty("margin-right", "3px");
                 if (chatSetting.isUse) {
                     (username.firstElementChild as HTMLElement).style.setProperty('width', '105%');
                     (username.firstElementChild as HTMLElement).style.setProperty('overflow', 'hidden');
@@ -145,7 +143,6 @@ const callback = (mutationList: MutationRecord[], observer: MutationObserver) =>
                     (username as HTMLElement).style.setProperty("flex", "0 0 8em");
                     (username as HTMLElement).style.setProperty("width", "8em");
                     (messageText as HTMLElement).style.setProperty("flex", "1");
-                    (msg as HTMLElement).style.setProperty("line-height", "1.3");
                 } else {
                     (username.firstElementChild as HTMLElement).style.removeProperty('width');
                     (username.firstElementChild as HTMLElement).style.removeProperty('overflow');
@@ -156,7 +153,6 @@ const callback = (mutationList: MutationRecord[], observer: MutationObserver) =>
                     (username as HTMLElement).style.removeProperty("flex");
                     (username as HTMLElement).style.removeProperty("width");
                     (messageText as HTMLElement).style.removeProperty("flex");
-                    (msg as HTMLElement).style.setProperty("line-height", "1.3");
                 }
                 if (chatTwoLine.isUse) {
                     (messageText as HTMLElement).style.setProperty("display", "block");
