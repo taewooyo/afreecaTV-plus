@@ -5,9 +5,11 @@ import {ChatCollectorData} from "@/src/model/ChatCollectorData";
 import {
     getChatSetting,
     getChatTwoLine,
-    getCollector, getDivider,
+    getCollector,
+    getDivider,
     getFanBadge,
-    getSubscribeBadge, getSupportBadge,
+    getSubscribeBadge,
+    getSupportBadge,
     getTopfanBadge
 } from "./getStorageData";
 import {ChatSetting} from "@/src/model/ChatSetting";
@@ -126,40 +128,6 @@ const callback = (mutationList: MutationRecord[], observer: MutationObserver) =>
                 if (rawUserId == null) return;
                 if (nickName == null) return;
                 if (grade == null) return;
-                const messageContainer = (node as HTMLElement).querySelector('.message-container');
-                const messageText = (node as HTMLElement).querySelector('.message-text');
-                const msg = (node as HTMLElement).querySelector('.msg');
-                const username = (node as HTMLElement).querySelector('.username');
-                if (username == null) return;
-                if (msg == null) return;
-                if (messageText == null || messageContainer == null) return;
-                if (chatSetting.isUse) {
-                    (username.firstElementChild as HTMLElement).style.setProperty('width', '105%');
-                    (username.firstElementChild as HTMLElement).style.setProperty('overflow', 'hidden');
-                    (username.firstElementChild as HTMLElement).style.setProperty('text-overflow', 'ellipsis');
-                    (username.firstElementChild as HTMLElement).style.setProperty('white-space', 'nowrap');
-                    (messageContainer as HTMLElement).style.setProperty("gap", "0 5px");
-                    (messageContainer as HTMLElement).style.setProperty("display", "flex");
-                    (username as HTMLElement).style.setProperty("flex", "0 0 8em");
-                    (username as HTMLElement).style.setProperty("width", "8em");
-                    (messageText as HTMLElement).style.setProperty("flex", "1");
-                } else {
-                    (username.firstElementChild as HTMLElement).style.removeProperty('width');
-                    (username.firstElementChild as HTMLElement).style.removeProperty('overflow');
-                    (username.firstElementChild as HTMLElement).style.removeProperty('text-overflow');
-                    (username.firstElementChild as HTMLElement).style.removeProperty('white-space');
-                    (messageContainer as HTMLElement).style.removeProperty("gap");
-                    (messageContainer as HTMLElement).style.removeProperty("display");
-                    (username as HTMLElement).style.removeProperty("flex");
-                    (username as HTMLElement).style.removeProperty("width");
-                    (messageText as HTMLElement).style.removeProperty("flex");
-                }
-                if (chatTwoLine.isUse) {
-                    (messageText as HTMLElement).style.setProperty("display", "block");
-                }
-                else {
-                    (messageText as HTMLElement).style.setProperty("display", "inline");
-                }
 
                 // 구독자 뱃지 제거
                 if (subscribeBadge.isUse) {
@@ -167,8 +135,7 @@ const callback = (mutationList: MutationRecord[], observer: MutationObserver) =>
                     if (thumb != null) {
                         (thumb as HTMLElement).style.setProperty("display", "none");
                     }
-                }
-                else {
+                } else {
                     const thumb = (node as HTMLElement).querySelector('.thumb');
                     if (thumb != null) {
                         (thumb as HTMLElement).style.setProperty("display", "inline-block");
@@ -181,8 +148,7 @@ const callback = (mutationList: MutationRecord[], observer: MutationObserver) =>
                     if (topFan != null) {
                         (topFan as HTMLElement).style.setProperty("display", "none");
                     }
-                }
-                else {
+                } else {
                     const topFan = (node as HTMLElement).querySelector('.grade-badge-vip');
                     if (topFan != null) {
                         (topFan as HTMLElement).style.removeProperty("display");
@@ -195,8 +161,7 @@ const callback = (mutationList: MutationRecord[], observer: MutationObserver) =>
                     if (fan != null) {
                         (fan as HTMLElement).style.setProperty("display", "none");
                     }
-                }
-                else {
+                } else {
                     const fan = (node as HTMLElement).querySelector('.grade-badge-fan');
                     if (fan != null) {
                         (fan as HTMLElement).style.removeProperty("display");
@@ -209,8 +174,7 @@ const callback = (mutationList: MutationRecord[], observer: MutationObserver) =>
                     if (support != null) {
                         (support as HTMLElement).style.setProperty("display", "none");
                     }
-                }
-                else {
+                } else {
                     const support = (node as HTMLElement).querySelector('.grade-badge-support');
                     if (support != null) {
                         (support as HTMLElement).style.removeProperty("display");
@@ -223,8 +187,7 @@ const callback = (mutationList: MutationRecord[], observer: MutationObserver) =>
                         const text = (author as HTMLElement).innerText;
                         (author as HTMLElement).innerText = text + " : ";
                     }
-                }
-                else {
+                } else {
                     const author = (node as HTMLElement).querySelector('.author')
                     if (author != null) {
                         const text = (author as HTMLElement).innerText;
@@ -458,6 +421,37 @@ window.addEventListener('load', async () => {
     fanBadge = await getFanBadge();
     supportBadge = await getSupportBadge();
     divider = await getDivider();
+    const filterArea = document.querySelector('.filter-area');
+    const liveArea = document.querySelector('.live-area');
+    if (filterArea == null || liveArea == null) return;
+    if (chatTwoLine.isUse) {
+        (liveArea as HTMLElement).setAttribute('data-mngr', 'chat_two_line');
+        (filterArea as HTMLElement).setAttribute('data-mngr', 'chat_two_line');
+    }
+    else {
+        if (chatSetting.isUse) {
+            (liveArea as HTMLElement).setAttribute('data-mngr', 'chat_sort');
+            (filterArea as HTMLElement).setAttribute('data-mngr', 'chat_sort');
+        }
+        else {
+            (liveArea as HTMLElement).removeAttribute('data-mngr');
+            (filterArea as HTMLElement).removeAttribute('data-mngr');
+        }
+    }
+    if (chatSetting.isUse) {
+        (liveArea as HTMLElement).setAttribute('data-mngr', 'chat_sort');
+        (filterArea as HTMLElement).setAttribute('data-mngr', 'chat_sort');
+    }
+    else {
+        if (chatTwoLine.isUse) {
+            (liveArea as HTMLElement).setAttribute('data-mngr', 'chat_two_line');
+            (filterArea as HTMLElement).setAttribute('data-mngr', 'chat_two_line');
+        }
+        else {
+            (liveArea as HTMLElement).removeAttribute('data-mngr');
+            (filterArea as HTMLElement).removeAttribute('data-mngr');
+        }
+    }
 
     if (chatCollector.isUse) {
         await divideContainer()
@@ -488,6 +482,37 @@ chrome.storage.local.onChanged.addListener(async (changes) => {
     fanBadge = await getFanBadge();
     supportBadge = await getSupportBadge();
     divider = await getDivider();
+    const filterArea = document.querySelector('.filter-area');
+    const liveArea = document.querySelector('.live-area');
+    if (filterArea == null || liveArea == null) return;
+    if (chatTwoLine.isUse) {
+        (liveArea as HTMLElement).setAttribute('data-mngr', 'chat_two_line');
+        (filterArea as HTMLElement).setAttribute('data-mngr', 'chat_two_line');
+    }
+    else {
+        if (chatSetting.isUse) {
+            (liveArea as HTMLElement).setAttribute('data-mngr', 'chat_sort');
+            (filterArea as HTMLElement).setAttribute('data-mngr', 'chat_sort');
+        }
+        else {
+            (liveArea as HTMLElement).removeAttribute('data-mngr');
+            (filterArea as HTMLElement).removeAttribute('data-mngr');
+        }
+    }
+    if (chatSetting.isUse) {
+        (liveArea as HTMLElement).setAttribute('data-mngr', 'chat_sort');
+        (filterArea as HTMLElement).setAttribute('data-mngr', 'chat_sort');
+    }
+    else {
+        if (chatTwoLine.isUse) {
+            (liveArea as HTMLElement).setAttribute('data-mngr', 'chat_two_line');
+            (filterArea as HTMLElement).setAttribute('data-mngr', 'chat_two_line');
+        }
+        else {
+            (liveArea as HTMLElement).removeAttribute('data-mngr');
+            (filterArea as HTMLElement).removeAttribute('data-mngr');
+        }
+    }
     if (chatCollector.isUse) {
         await divideContainer()
     } else restoreContainer()

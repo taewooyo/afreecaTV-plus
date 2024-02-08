@@ -82,3 +82,40 @@
     overflow: auto;
     overflow-x: hidden;
 }
+
+/*(username.firstElementChild as HTMLElement).style.setProperty('width', '105%');*/
+/*(username.firstElementChild as HTMLElement).style.setProperty('overflow', 'hidden');*/
+/*(username.firstElementChild as HTMLElement).style.setProperty('text-overflow', 'ellipsis');*/
+/*(username.firstElementChild as HTMLElement).style.setProperty('white-space', 'nowrap');*/
+/*111(messageContainer as HTMLElement).style.setProperty("gap", "0 5px");*/
+/*111(messageContainer as HTMLElement).style.setProperty("display", "flex");*/
+/*111(username as HTMLElement).style.setProperty("flex", "0 0 8em");*/
+/*111(username as HTMLElement).style.setProperty("width", "8em");*/
+/*111(messageText as HTMLElement).style.setProperty("flex", "1");*/
+
+#chat_area[data-mngr*="chat_two_line"] .chatting-list-item .message-container .message-text {
+    display: block;
+}
+
+#chat_area[data-mngr*="chat_sort"] .chatting-list-item .message-container .username button {
+    width: 105%;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+#chat_area[data-mngr*="chat_sort"] .chatting-list-item .message-container {
+    display: flex;
+    gap: 0 5px;
+}
+
+#chat_area[data-mngr*="chat_sort"] .chatting-list-item .message-container .username {
+    flex: 0 0 8em;
+    width: 8em;
+    margin: 0;
+    line-height: 1.5;
+}
+
+#chat_area[data-mngr*="chat_sort"] .chatting-list-item .message-container .message-text {
+    flex: 1;
+}
