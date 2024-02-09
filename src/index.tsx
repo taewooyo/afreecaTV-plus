@@ -8,7 +8,7 @@ import {
     getCollector, getDivider,
     getFanBadge,
     getIds,
-    getNicks,
+    getNicks, getScreenMode,
     getSubscribeBadge, getSupportBadge,
     getToggle, getTopfanBadge
 } from './getStorageData';
@@ -31,6 +31,7 @@ import {FavoriteChannelData} from "@/src/model/FavoriteChannelData";
         const supportBadge = await getSupportBadge();
         const topfanBadge = await getTopfanBadge();
         const divider = await getDivider();
+        // const screenMode = await getScreenMode();
         root.render(
             <App nicks={nicks} ids={ids} toggle={toggle} collector={collector}
                  chatSetting={chatSetting} chatTwoLine={chatTwoLine}

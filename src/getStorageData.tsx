@@ -83,3 +83,9 @@ export const getDivider = async (): Promise<Divider> => {
     if (res.divider) return res.divider;
     else return {isUse: false};
 }
+
+// export const getScreenMode = async (): Promise<ScreenMode> => {
+//     const res = await chrome.storage.local.get("screenMode");
+//     if (res.screenMode) return res.screenMode;
+//     else return {isUse: false};
+// }

@@ -210,6 +210,7 @@ const callback = (mutationList: MutationRecord[], observer: MutationObserver) =>
 let filterArea: HTMLDivElement;
 
 async function initLocalChatContainer() {
+    //ko_KR ratio169_mode smode thema_dark
     const chatBox = document.getElementById('chatbox');
     const actionbox = document.getElementById('actionbox');
     const areaHeader = document.querySelector('.area_header');
@@ -421,19 +422,28 @@ window.addEventListener('load', async () => {
     fanBadge = await getFanBadge();
     supportBadge = await getSupportBadge();
     divider = await getDivider();
+    // screenMode = await getScreenMode();
+    // if (screenMode.isUse) {
+    //     const body = document.querySelector('.ko_KR');
+    //     (body as HTMLElement).classList.add('smode');
+    //     (body as HTMLElement).classList.add('thema_dark');
+    // }
+    // else {
+    //     const body = document.querySelector('.ko_KR');
+    //     (body as HTMLElement).classList.remove('smode');
+    //     (body as HTMLElement).classList.remove('thema_dark');
+    // }
     const filterArea = document.querySelector('.filter-area');
     const liveArea = document.querySelector('.live-area');
     if (filterArea == null || liveArea == null) return;
     if (chatTwoLine.isUse) {
         (liveArea as HTMLElement).setAttribute('data-mngr', 'chat_two_line');
         (filterArea as HTMLElement).setAttribute('data-mngr', 'chat_two_line');
-    }
-    else {
+    } else {
         if (chatSetting.isUse) {
             (liveArea as HTMLElement).setAttribute('data-mngr', 'chat_sort');
             (filterArea as HTMLElement).setAttribute('data-mngr', 'chat_sort');
-        }
-        else {
+        } else {
             (liveArea as HTMLElement).removeAttribute('data-mngr');
             (filterArea as HTMLElement).removeAttribute('data-mngr');
         }
@@ -441,13 +451,11 @@ window.addEventListener('load', async () => {
     if (chatSetting.isUse) {
         (liveArea as HTMLElement).setAttribute('data-mngr', 'chat_sort');
         (filterArea as HTMLElement).setAttribute('data-mngr', 'chat_sort');
-    }
-    else {
+    } else {
         if (chatTwoLine.isUse) {
             (liveArea as HTMLElement).setAttribute('data-mngr', 'chat_two_line');
             (filterArea as HTMLElement).setAttribute('data-mngr', 'chat_two_line');
-        }
-        else {
+        } else {
             (liveArea as HTMLElement).removeAttribute('data-mngr');
             (filterArea as HTMLElement).removeAttribute('data-mngr');
         }
@@ -482,19 +490,28 @@ chrome.storage.local.onChanged.addListener(async (changes) => {
     fanBadge = await getFanBadge();
     supportBadge = await getSupportBadge();
     divider = await getDivider();
+    // screenMode = await getScreenMode();
+    // if (screenMode.isUse) {
+    //     const body = document.querySelector('.ko_KR');
+    //     (body as HTMLElement).classList.add('smode');
+    //     (body as HTMLElement).classList.add('thema_dark');
+    // }
+    // else {
+    //     const body = document.querySelector('.ko_KR');
+    //     (body as HTMLElement).classList.remove('smode');
+    //     (body as HTMLElement).classList.remove('thema_dark');
+    // }
     const filterArea = document.querySelector('.filter-area');
     const liveArea = document.querySelector('.live-area');
     if (filterArea == null || liveArea == null) return;
     if (chatTwoLine.isUse) {
         (liveArea as HTMLElement).setAttribute('data-mngr', 'chat_two_line');
         (filterArea as HTMLElement).setAttribute('data-mngr', 'chat_two_line');
-    }
-    else {
+    } else {
         if (chatSetting.isUse) {
             (liveArea as HTMLElement).setAttribute('data-mngr', 'chat_sort');
             (filterArea as HTMLElement).setAttribute('data-mngr', 'chat_sort');
-        }
-        else {
+        } else {
             (liveArea as HTMLElement).removeAttribute('data-mngr');
             (filterArea as HTMLElement).removeAttribute('data-mngr');
         }
@@ -502,13 +519,11 @@ chrome.storage.local.onChanged.addListener(async (changes) => {
     if (chatSetting.isUse) {
         (liveArea as HTMLElement).setAttribute('data-mngr', 'chat_sort');
         (filterArea as HTMLElement).setAttribute('data-mngr', 'chat_sort');
-    }
-    else {
+    } else {
         if (chatTwoLine.isUse) {
             (liveArea as HTMLElement).setAttribute('data-mngr', 'chat_two_line');
             (filterArea as HTMLElement).setAttribute('data-mngr', 'chat_two_line');
-        }
-        else {
+        } else {
             (liveArea as HTMLElement).removeAttribute('data-mngr');
             (filterArea as HTMLElement).removeAttribute('data-mngr');
         }

@@ -25,7 +25,8 @@ export default function App(props: {
     subscribeBadge: SubscribeBadge,
     supportBadge: SupportBadge,
     topfanBadge: TopfanBadge,
-    divider: Divider
+    divider: Divider,
+    // screenMode: ScreenMode
 }) {
     const [nicks, setNicks] = useState(props.nicks);
     const [ids, setIds] = useState(props.ids);
@@ -39,6 +40,7 @@ export default function App(props: {
     const [supportBadge, setSupportBadge] = useState(props.supportBadge)
     const [topFanBadge, setTopFanBadge] = useState(props.topfanBadge)
     const [divider, setDivider] = useState(props.divider)
+    // const [screenMode, setScreenMode] = useState(props.screenMode);
     const nickInput = useRef<HTMLInputElement>(null);
     const idInput = useRef<HTMLInputElement>(null);
 
@@ -215,6 +217,13 @@ export default function App(props: {
         });
     }
 
+    // const changeScreenMode = () => {
+    //     let newScreenMode = {isUse: !screenMode.isUse};
+    //     chrome.storage.local.set({screenMode: newScreenMode}, () => {
+    //         setScreenMode(newScreenMode);
+    //     });
+    // }
+
     const onClickHome = () => {
         window.open("https://afreecatv.com", "_blank")
     }
@@ -296,6 +305,11 @@ export default function App(props: {
                 </div>
                 <div>
                     <ul>
+                        {/*<Toggle*/}
+                        {/*    onChange={() => changeScreenMode()}*/}
+                        {/*    label="입장 시 스크린모드 유지"*/}
+                        {/*    value={screenMode.isUse}*/}
+                        {/*/>*/}
                         <Toggle
                             onChange={() => changeDivider()}
                             label="채팅 구분자"
