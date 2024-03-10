@@ -4,7 +4,8 @@ module.exports = {
     entry: {
         "main": "./src/index.tsx",
         "preview": "./src/preview.ts",
-        "chat": "./src/chat.tsx"
+        "chat": "./src/chat.tsx",
+        "vod": "./src/vodChat.tsx"
     },
     output: {
         filename: "[name].js",

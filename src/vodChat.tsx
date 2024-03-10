@@ -75,7 +75,7 @@ async function updateToggle() {
     })
 }
 
-function filter(nickname: string, rawUserId: string, grade: string): boolean {
+function filter(nickname: string, rawUserId: string, userType: string): boolean {
     let flag = 0;
     const lastIndex = rawUserId.indexOf('(');
     let userId: string;
@@ -97,17 +97,18 @@ function filter(nickname: string, rawUserId: string, grade: string): boolean {
             return;
         }
     })
-    if (grade == "bj" && toggle.streamer) {
+    // "" 일반유저, fan; 팬클 subscribe; 구독자 manager; 매니저 vip; 열혈 streamer; bj
+    if (userType == "streamer" && toggle.streamer) {
         flag = 1;
-    } else if (grade == "manager" && toggle.manager) {
+    } else if (userType == "manager" && toggle.manager) {
         flag = 1;
-    } else if (grade == "topfan" && toggle.topfan) {
+    } else if (userType == "vip" && toggle.topfan) {
         flag = 1;
-    } else if (grade == "gudok" && toggle.gudok) {
+    } else if (userType == "subscribe" && toggle.gudok) {
         flag = 1;
-    } else if (grade == "fan" && toggle.fan) {
+    } else if (userType == "fan" && toggle.fan) {
         flag = 1;
-    } else if (grade == "user" && toggle.user) {
+    } else if (userType == "" && toggle.user) {
         flag = 1;
     }
     return flag == 1;
@@ -125,13 +126,12 @@ const callback = (mutationList: MutationRecord[], observer: MutationObserver) =>
                 if (user == null) return
                 const userButton = user.querySelector('button')
                 if (userButton == null) return
-                const rawUserId = userButton.getAttribute('user_id')
-                const nickName = userButton.getAttribute('user_nick')
-                const grade = userButton.getAttribute('grade')
+                const rawUserId = (userButton.lastElementChild as HTMLElement).getAttribute('user_id');
+                const nickName = (userButton.lastElementChild as HTMLElement).getAttribute('user_nick');
+                const userType = (container.parentElement as HTMLElement).getAttribute('user-type');
                 if (rawUserId == null) return;
                 if (nickName == null) return;
-                if (grade == null) return;
-
+                if (userType == null) return;
                 // 구독자 뱃지 제거
                 if (subscribeBadge.isUse) {
                     const thumb = (node as HTMLElement).querySelector('.thumb');
@@ -201,7 +201,7 @@ const callback = (mutationList: MutationRecord[], observer: MutationObserver) =>
                     }
                 }
 
-                if (filter(nickName, rawUserId, grade) && filterArea != null) {
+                if (filter(nickName, rawUserId, userType) && filterArea != null) {
                     (filterArea as HTMLElement).appendChild(node.cloneNode(true));
                     if (highlight.isUse) {
                         (container as HTMLElement).style.borderLeft = "4px solid rgb(255, 193, 7)";
@@ -219,14 +219,13 @@ let filterArea: HTMLDivElement;
 
 async function initLocalChatContainer() {
     //ko_KR ratio169_mode smode thema_dark
-    const chatBox = document.getElementById('chatbox');
-    const actionbox = document.getElementById('actionbox');
+    const chatBox = document.getElementById('chatbox_height');
     const areaHeader = document.querySelector('.area_header');
-    const chatArea = document.getElementById('chat_area')
-    if (chatBox == null || chatArea == null || actionbox == null || areaHeader == null) return;
+    const chatArea = document.getElementById('chatArea');
+    if (chatBox == null || chatArea == null || areaHeader == null) return;
     filterArea = chatArea.cloneNode() as HTMLDivElement
-    const parentChat = chatArea.parentNode as Element
-    const v = chatBox?.clientHeight - actionbox?.clientHeight - areaHeader?.clientHeight - 20;
+    const parentChat = chatArea.parentNode as Element;
+    const v = chatBox?.clientHeight - areaHeader?.clientHeight - 20;
     const container = document.createElement('div');
     container.id = 'afreeca-chat-list-container'
     container.style.setProperty('width', '100%');
@@ -362,10 +361,9 @@ function CollectorChange() {
 const resizeObserver = new ResizeObserver(entries => {
     for (const entry of entries) {
         const currentHeight = entry.contentRect.height;
-        const actionbox = document.getElementById('actionbox');
         const areaHeader = document.querySelector('.area_header');
-        if (actionbox == null || areaHeader == null) return;
-        const h = currentHeight - actionbox.clientHeight - areaHeader.clientHeight - 20;
+        if (areaHeader == null) return;
+        const h = currentHeight - areaHeader.clientHeight - 20;
         if (previousData == null) {
             previousData = h
             divideContainer();
@@ -415,77 +413,66 @@ function restoreContainer() {
     (liveArea as HTMLElement).style.removeProperty('top');
 }
 
-window.addEventListener('load', async () => {
-    chatArea = document.getElementById('chat_area')
-    if (!chatArea) return;
-    await initLocalChatContainer();
-    await updateNickname();
-    await updateId();
-    await updateToggle();
-    chatCollector = await getCollector();
-    chatSetting = await getChatSetting();
-    chatTwoLine = await getChatTwoLine();
-    subscribeBadge = await getSubscribeBadge();
-    topFanBadge = await getTopfanBadge();
-    fanBadge = await getFanBadge();
-    supportBadge = await getSupportBadge();
-    highlight = await getHighlight();
-    divider = await getDivider();
-    // screenMode = await getScreenMode();
-    // if (screenMode.isUse) {
-    //     const body = document.querySelector('.ko_KR');
-    //     (body as HTMLElement).classList.add('smode');
-    //     (body as HTMLElement).classList.add('thema_dark');
-    // }
-    // else {
-    //     const body = document.querySelector('.ko_KR');
-    //     (body as HTMLElement).classList.remove('smode');
-    //     (body as HTMLElement).classList.remove('thema_dark');
-    // }
-    const filterArea = document.querySelector('.filter-area');
-    const liveArea = document.querySelector('.live-area');
-    if (filterArea == null || liveArea == null) return;
-    if (chatTwoLine.isUse) {
-        (liveArea as HTMLElement).setAttribute('data-mngr', 'chat_two_line');
-        (filterArea as HTMLElement).setAttribute('data-mngr', 'chat_two_line');
-    } else {
-        if (chatSetting.isUse) {
-            (liveArea as HTMLElement).setAttribute('data-mngr', 'chat_sort');
-            (filterArea as HTMLElement).setAttribute('data-mngr', 'chat_sort');
-        } else {
-            (liveArea as HTMLElement).removeAttribute('data-mngr');
-            (filterArea as HTMLElement).removeAttribute('data-mngr');
-        }
-    }
-    if (chatSetting.isUse) {
-        (liveArea as HTMLElement).setAttribute('data-mngr', 'chat_sort');
-        (filterArea as HTMLElement).setAttribute('data-mngr', 'chat_sort');
-    } else {
+setTimeout(async () => {
+        chatArea = document.getElementById('chatArea')
+        if (!chatArea) return;
+        await initLocalChatContainer();
+        await updateNickname();
+        await updateId();
+        await updateToggle();
+        chatCollector = await getCollector();
+        chatSetting = await getChatSetting();
+        chatTwoLine = await getChatTwoLine();
+        subscribeBadge = await getSubscribeBadge();
+        topFanBadge = await getTopfanBadge();
+        fanBadge = await getFanBadge();
+        supportBadge = await getSupportBadge();
+        highlight = await getHighlight();
+        divider = await getDivider();
+        const filterArea = document.querySelector('.filter-area');
+        const liveArea = document.querySelector('.live-area');
+        if (filterArea == null || liveArea == null) return;
         if (chatTwoLine.isUse) {
             (liveArea as HTMLElement).setAttribute('data-mngr', 'chat_two_line');
             (filterArea as HTMLElement).setAttribute('data-mngr', 'chat_two_line');
         } else {
-            (liveArea as HTMLElement).removeAttribute('data-mngr');
-            (filterArea as HTMLElement).removeAttribute('data-mngr');
+            if (chatSetting.isUse) {
+                (liveArea as HTMLElement).setAttribute('data-mngr', 'chat_sort');
+                (filterArea as HTMLElement).setAttribute('data-mngr', 'chat_sort');
+            } else {
+                (liveArea as HTMLElement).removeAttribute('data-mngr');
+                (filterArea as HTMLElement).removeAttribute('data-mngr');
+            }
         }
-    }
+        if (chatSetting.isUse) {
+            (liveArea as HTMLElement).setAttribute('data-mngr', 'chat_sort');
+            (filterArea as HTMLElement).setAttribute('data-mngr', 'chat_sort');
+        } else {
+            if (chatTwoLine.isUse) {
+                (liveArea as HTMLElement).setAttribute('data-mngr', 'chat_two_line');
+                (filterArea as HTMLElement).setAttribute('data-mngr', 'chat_two_line');
+            } else {
+                (liveArea as HTMLElement).removeAttribute('data-mngr');
+                (filterArea as HTMLElement).removeAttribute('data-mngr');
+            }
+        }
 
-    if (chatCollector.isUse) {
-        await divideContainer()
-    } else restoreContainer()
-    // const t = document.getElementById("chatbox");
-    // if (t != null) {
-    //     resizeObserver.observe(t);
-    // }
-    CaptureButton();
-    CollectorChange();
-    const observer = new MutationObserver(callback);
-    if (chatArea) {
-        observer.observe((chatArea as Node), config)
-    } else {
+        if (chatCollector.isUse) {
+            await divideContainer()
+        } else restoreContainer()
+        // const t = document.getElementById("chatbox");
+        // if (t != null) {
+        //     resizeObserver.observe(t);
+        // }
+        // CaptureButton();
+        // CollectorChange();
+        const observer = new MutationObserver(callback);
+        if (chatArea) {
+            observer.observe((chatArea as Node), config)
+        } else {
 
-    }
-})
+        }
+}, 600);
 
 chrome.storage.local.onChanged.addListener(async (changes) => {
     await updateNickname();
@@ -500,17 +487,6 @@ chrome.storage.local.onChanged.addListener(async (changes) => {
     supportBadge = await getSupportBadge();
     highlight = await getHighlight();
     divider = await getDivider();
-    // screenMode = await getScreenMode();
-    // if (screenMode.isUse) {
-    //     const body = document.querySelector('.ko_KR');
-    //     (body as HTMLElement).classList.add('smode');
-    //     (body as HTMLElement).classList.add('thema_dark');
-    // }
-    // else {
-    //     const body = document.querySelector('.ko_KR');
-    //     (body as HTMLElement).classList.remove('smode');
-    //     (body as HTMLElement).classList.remove('thema_dark');
-    // }
     const filterArea = document.querySelector('.filter-area');
     const liveArea = document.querySelector('.live-area');
     if (filterArea == null || liveArea == null) return;
@@ -643,10 +619,9 @@ function updateContainerRatio(
 const qwer = new ResizeObserver(entries => {
     for (const entry of entries) {
         const currentHeight = entry.contentRect.height;
-        const actionbox = document.getElementById('actionbox');
         const areaHeader = document.querySelector('.area_header');
-        if (actionbox == null || areaHeader == null) return;
-        const h = currentHeight - actionbox.clientHeight - areaHeader.clientHeight - 20;
+        if (areaHeader == null) return;
+        const h = currentHeight - areaHeader.clientHeight - 20;
         const container = document.getElementById('afreeca-chat-list-container');
         if (container == null) return;
         const filterArea = document.querySelector('.filter-area');
@@ -666,38 +641,7 @@ const qwer = new ResizeObserver(entries => {
     }
 });
 
-const t = document.getElementById("chatbox");
+const t = document.getElementById("chatbox_height");
 if (t != null) {
     qwer.observe(t);
-}
-
-const qqq = new ResizeObserver(entries => {
-    for (const entry of entries) {
-        const chatbox = document.getElementById('chatbox');
-        const actionbox = document.getElementById('actionbox');
-        const areaHeader = document.querySelector('.area_header');
-        if (chatbox == null || actionbox == null || areaHeader == null) return;
-        const h = chatbox.clientHeight - actionbox.clientHeight - areaHeader.clientHeight - 20;
-        const container = document.getElementById('afreeca-chat-list-container');
-        if (container == null) return;
-        const filterArea = document.querySelector('.filter-area');
-        if (filterArea == null) return;
-        const liveArea = document.querySelector('.live-area');
-        if (liveArea == null) return;
-        container.style.setProperty('height', h + 'px');
-        if (chatCollector.isUse) {
-            divideContainer();
-            const index = (filterArea as HTMLElement).style.height.indexOf('%');
-            const filterAreaHeightNumber = (filterArea as HTMLElement).style.height.substring(0, index);
-            const filterAreaHeight = 100 - Number(filterAreaHeightNumber);
-            (liveArea as HTMLElement).style.setProperty('height', filterAreaHeight + '%');
-        } else {
-            restoreContainer();
-        }
-    }
-});
-
-const tt = document.getElementById("actionbox");
-if (tt != null) {
-    qqq.observe(tt);
 }

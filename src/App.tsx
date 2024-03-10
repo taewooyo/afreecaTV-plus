@@ -12,6 +12,7 @@ import {SubscribeBadge} from "@/src/model/SubscribeBadge";
 import {SupportBadge} from "@/src/model/SupportBadge";
 import {TopfanBadge} from "@/src/model/TopfanBadge";
 import {Divider} from "@/src/model/Divider";
+import {Highlight} from "@/src/model/Highlight";
 
 export default function App(props: {
     nicks: User[];
@@ -26,7 +27,7 @@ export default function App(props: {
     supportBadge: SupportBadge,
     topfanBadge: TopfanBadge,
     divider: Divider,
-    // screenMode: ScreenMode
+    highlight: Highlight
 }) {
     const [nicks, setNicks] = useState(props.nicks);
     const [ids, setIds] = useState(props.ids);
@@ -40,7 +41,7 @@ export default function App(props: {
     const [supportBadge, setSupportBadge] = useState(props.supportBadge)
     const [topFanBadge, setTopFanBadge] = useState(props.topfanBadge)
     const [divider, setDivider] = useState(props.divider)
-    // const [screenMode, setScreenMode] = useState(props.screenMode);
+    const [highlight, setHighlight] = useState(props.highlight);
     const nickInput = useRef<HTMLInputElement>(null);
     const idInput = useRef<HTMLInputElement>(null);
 
@@ -217,12 +218,12 @@ export default function App(props: {
         });
     }
 
-    // const changeScreenMode = () => {
-    //     let newScreenMode = {isUse: !screenMode.isUse};
-    //     chrome.storage.local.set({screenMode: newScreenMode}, () => {
-    //         setScreenMode(newScreenMode);
-    //     });
-    // }
+    const changeHighlight = () => {
+        let newHighlight = {isUse: !highlight.isUse};
+        chrome.storage.local.set({highlight: newHighlight}, () => {
+            setHighlight(newHighlight);
+        });
+    }
 
     const onClickHome = () => {
         window.open("https://afreecatv.com", "_blank")
@@ -247,7 +248,7 @@ export default function App(props: {
                 textAlign: "center",
                 color: "white",
                 padding: "2rem",
-                minWidth: "400px",
+                minWidth: "530px",
                 display: "flex",
                 justifyContent: "start",
             }}
@@ -305,11 +306,6 @@ export default function App(props: {
                 </div>
                 <div>
                     <ul>
-                        {/*<Toggle*/}
-                        {/*    onChange={() => changeScreenMode()}*/}
-                        {/*    label="입장 시 스크린모드 유지"*/}
-                        {/*    value={screenMode.isUse}*/}
-                        {/*/>*/}
                         <Toggle
                             onChange={() => changeDivider()}
                             label="채팅 구분자"
@@ -349,6 +345,11 @@ export default function App(props: {
                             onChange={() => changeCollector()}
                             label="채팅 콜렉터"
                             value={collector.isUse}
+                        />
+                        <Toggle
+                            onChange={() => changeHighlight()}
+                            label="콜렉터 채팅 하이라이트 처리"
+                            value={highlight.isUse}
                         />
                         <Toggle
                             onChange={() => changeToggle("streamer")}

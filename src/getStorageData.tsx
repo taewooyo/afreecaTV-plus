@@ -8,6 +8,7 @@ import {SupportBadge} from "@/src/model/SupportBadge";
 import {SubscribeBadge} from "@/src/model/SubscribeBadge";
 import {FanBadge} from "@/src/model/FanBadge";
 import {Divider} from "@/src/model/Divider";
+import {Highlight} from "@/src/model/Highlight";
 
 
 export const getNicks = async (): Promise<User[]> => {
@@ -84,8 +85,8 @@ export const getDivider = async (): Promise<Divider> => {
     else return {isUse: false};
 }
 
-// export const getScreenMode = async (): Promise<ScreenMode> => {
-//     const res = await chrome.storage.local.get("screenMode");
-//     if (res.screenMode) return res.screenMode;
-//     else return {isUse: false};
-// }
+export const getHighlight = async (): Promise<Highlight> => {
+    const res = await chrome.storage.local.get("highlight");
+    if (res.highlight) return res.highlight;
+    else return {isUse: true};
+}

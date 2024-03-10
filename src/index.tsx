@@ -5,12 +5,16 @@ import '../public/manifest.json';
 import {
     getChatSetting,
     getChatTwoLine,
-    getCollector, getDivider,
+    getCollector,
+    getDivider,
     getFanBadge,
+    getHighlight,
     getIds,
-    getNicks, getScreenMode,
-    getSubscribeBadge, getSupportBadge,
-    getToggle, getTopfanBadge
+    getNicks,
+    getSubscribeBadge,
+    getSupportBadge,
+    getToggle,
+    getTopfanBadge
 } from './getStorageData';
 import {FavoriteChannelData} from "@/src/model/FavoriteChannelData";
 
@@ -31,12 +35,13 @@ import {FavoriteChannelData} from "@/src/model/FavoriteChannelData";
         const supportBadge = await getSupportBadge();
         const topfanBadge = await getTopfanBadge();
         const divider = await getDivider();
-        // const screenMode = await getScreenMode();
+        const highlight = await getHighlight();
         root.render(
             <App nicks={nicks} ids={ids} toggle={toggle} collector={collector}
                  chatSetting={chatSetting} chatTwoLine={chatTwoLine}
-                 fanBadge={fanBadge} subscribeBadge={subscribeBadge} supportBadge={supportBadge} topfanBadge={topfanBadge}
-                 divider={divider}
+                 fanBadge={fanBadge} subscribeBadge={subscribeBadge} supportBadge={supportBadge}
+                 topfanBadge={topfanBadge}
+                 divider={divider} highlight={highlight}
             />);
     } catch (e) {
 

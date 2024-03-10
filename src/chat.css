@@ -83,16 +83,6 @@
     overflow-x: hidden;
 }
 
-/*(username.firstElementChild as HTMLElement).style.setProperty('width', '105%');*/
-/*(username.firstElementChild as HTMLElement).style.setProperty('overflow', 'hidden');*/
-/*(username.firstElementChild as HTMLElement).style.setProperty('text-overflow', 'ellipsis');*/
-/*(username.firstElementChild as HTMLElement).style.setProperty('white-space', 'nowrap');*/
-/*111(messageContainer as HTMLElement).style.setProperty("gap", "0 5px");*/
-/*111(messageContainer as HTMLElement).style.setProperty("display", "flex");*/
-/*111(username as HTMLElement).style.setProperty("flex", "0 0 8em");*/
-/*111(username as HTMLElement).style.setProperty("width", "8em");*/
-/*111(messageText as HTMLElement).style.setProperty("flex", "1");*/
-
 #chat_area[data-mngr*="chat_two_line"] .chatting-list-item .message-container .message-text {
     display: block;
 }
