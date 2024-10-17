@@ -226,7 +226,7 @@ export default function App(props: {
     }
 
     const onClickHome = () => {
-        window.open("https://afreecatv.com", "_blank")
+        window.open("https://www.sooplive.co.kr", "_blank")
     }
 
     const onClickIssue = () => {
@@ -262,7 +262,7 @@ export default function App(props: {
                         marginBottom: "10px",
                     }}
                 >
-                    <span>AfreecaTV Plus</span>
+                    <span>SOOP Plus</span>
                 </header>
                 <div style={{
                     display: "flex",
@@ -275,7 +275,7 @@ export default function App(props: {
                         style={{
                             marginLeft: "5px",
                             color: "#000",
-                            background: "linear-gradient(#C6F40AFF, #EDE80CFF)",
+                            background: "linear-gradient(#058CFF, #05ACFF, #1FF4EC)",
                             borderRadius: "15px",
                             border: "none",
                             padding: "0.5rem 1rem",
@@ -284,7 +284,7 @@ export default function App(props: {
                             textDecoration: "auto",
                             cursor: "pointer"
                         }}
-                    >아프리카티비 이동하기
+                    >SOOP 이동하기
                     </button>
                     <button
                         onClick={onClickIssue}
@@ -292,7 +292,7 @@ export default function App(props: {
                         style={{
                             marginLeft: "5px",
                             color: "#000",
-                            background: "linear-gradient(#C6F40AFF, #EDE80CFF)",
+                            background: "linear-gradient(#058CFF, #05ACFF, #1FF4EC)",
                             borderRadius: "15px",
                             border: "none",
                             padding: "0.5rem 1rem",
@@ -409,7 +409,7 @@ export default function App(props: {
                             style={{
                                 marginLeft: "5px",
                                 color: "#000",
-                                background: "linear-gradient(#C6F40AFF, #EDE80CFF)",
+                                background: "linear-gradient(#058CFF, #05ACFF, #1FF4EC)",
                                 borderRadius: "15px",
                                 border: "none",
                                 padding: "0.5rem 1rem",
@@ -445,7 +445,7 @@ export default function App(props: {
                             style={{
                                 marginLeft: "5px",
                                 color: "#000",
-                                background: "linear-gradient(#C6F40AFF, #EDE80CFF)",
+                                background: "linear-gradient(#058CFF, #05ACFF, #1FF4EC)",
                                 borderRadius: "15px",
                                 border: "none",
                                 padding: "0.5rem 1rem",

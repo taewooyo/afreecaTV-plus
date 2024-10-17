@@ -264,9 +264,7 @@ function CaptureButton() {
     const li = document.createElement('li')
     li.classList.add('share');
     const tooltip = document.createElement('div');
-    tooltip.classList.add('sub_tooltip')
     tooltip.innerText = "방송 캡처"
-    tooltip.style.setProperty('transform', 'translate(-80%, 0)');
     const span = document.createElement('span')
     span.innerText = "방송 캡처";
 
@@ -306,16 +304,19 @@ function CaptureButton() {
 }
 
 function CollectorChange() {
-    const playerItemList = document.querySelector('.player_item_list');
-    const playerItemListUL = playerItemList?.querySelector('ul');
-    const li = document.createElement('li')
-    li.classList.add('share');
-    const tooltip = document.createElement('div');
-    tooltip.classList.add('sub_tooltip')
-    tooltip.innerText = "콜렉터 상하변경"
-    tooltip.style.setProperty('transform', 'translate(-80%, 0)');
-    const span = document.createElement('span')
-    span.innerText = "콜렉터 상하변경";
+    const chat_item_list = document.querySelector('.chat_item_list');
+    const item_box = chat_item_list?.querySelector('ul');
+    // filterArea = chatArea.cloneNode() as HTMLDivElement
+    const start = item_box?.querySelector('li.star') as HTMLElement;
+    const cloneNode = start?.cloneNode(false) as HTMLElement;
+
+
+    // const li = document.createElement('li')
+    // li.classList.add('share');
+    // const tooltip = document.createElement('div');
+    // tooltip.classList.add('sub_tooltip')
+    // tooltip.innerText = "콜렉터 상하변경"
+    // tooltip.style.setProperty('transform', 'translate(-80%, 0)');
 
     const collectorChangeButton = document.createElement('button');
     collectorChangeButton.addEventListener('click', (e) => {
@@ -353,10 +354,14 @@ function CollectorChange() {
     const updatedSvg = collectorChangeButton.querySelector('svg')
     if (updatedSvg == null) return;
     updatedSvg.style.setProperty('vertical-align', 'middle');
-    collectorChangeButton.appendChild(span);
-    li.appendChild(collectorChangeButton);
-    li.appendChild(tooltip);
-    playerItemListUL?.appendChild(li);
+    collectorChangeButton.setAttribute('tip', '채팅창 상하 변경');
+    cloneNode.appendChild(collectorChangeButton);
+    // li.appendChild(collectorChangeButton);
+    // li.appendChild(tooltip);
+    // playerItemListUL?.appendChild(li);
+    if (cloneNode != null) {
+        start?.insertAdjacentElement('beforebegin', cloneNode);
+    }
 }
 
 const resizeObserver = new ResizeObserver(entries => {
@@ -477,7 +482,7 @@ window.addEventListener('load', async () => {
     // if (t != null) {
     //     resizeObserver.observe(t);
     // }
-    CaptureButton();
+    // CaptureButton();
     CollectorChange();
     const observer = new MutationObserver(callback);
     if (chatArea) {

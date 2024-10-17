@@ -100,8 +100,8 @@
 }
 
 #chat_area[data-mngr*="chat_sort"] .chatting-list-item .message-container .username {
-    flex: 0 0 8em;
-    width: 8em;
+    flex: 0 0 auto;
+    width: 126px;
     margin: 0;
     line-height: 1.5;
 }
