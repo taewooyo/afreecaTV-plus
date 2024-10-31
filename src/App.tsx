@@ -253,7 +253,11 @@ export default function App(props: {
                 justifyContent: "start",
             }}
         >
-            <div>
+            <div
+                style={{
+                    margin: '0 auto',
+                }}
+            >
                 <header
                     className="header"
                     style={{
