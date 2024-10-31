@@ -356,6 +356,11 @@ function CollectorChange() {
         "</style><line class=\"st0\" x1=\"60\" x2=\"60\" y1=\"-67.7\" y2=\"-73.2\"/><g><path class=\"st1\" d=\"M55.4,46.1L37.3,21.5c-1.2-1.6-3.6-1.6-4.7,0L14.4,46.1c-1.4,1.9,0,4.7,2.4,4.7h8.3v46c0,1.6,1.3,2.9,2.9,2.9   h13.8c1.6,0,2.9-1.3,2.9-2.9v-46H53C55.4,50.8,56.8,48.1,55.4,46.1z\"/><path class=\"st2\" d=\"M105.6,73.9L87.5,98.5c-1.2,1.6-3.6,1.6-4.7,0L64.6,73.9c-1.4-1.9,0-4.7,2.4-4.7h8.2v-46   c0-1.6,1.3-2.9,2.9-2.9H92c1.6,0,2.9,1.3,2.9,2.9v46h8.3C105.6,69.2,107,71.9,105.6,73.9z\"/></g></svg>"
     const updatedSvg = collectorChangeButton.querySelector('svg')
     if (updatedSvg == null) return;
+    // 채팅 하단 영역 z-index 변경
+    const chatActionBox = document.getElementById("actionbox");
+    if (chatActionBox == null) return;
+    chatActionBox.style.setProperty("z-index", "110");
+
     updatedSvg.style.setProperty('vertical-align', 'middle');
     collectorChangeButton.setAttribute('tip', '채팅창 상하 변경');
     cloneNode.appendChild(collectorChangeButton);
