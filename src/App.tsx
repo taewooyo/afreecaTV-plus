@@ -257,12 +257,10 @@ export default function App(props: {
                 <header
                     className="header"
                     style={{
-                        fontSize: "1.5rem",
-                        fontWeight: "bold",
-                        marginBottom: "10px",
+                        marginBottom: "20px",
                     }}
                 >
-                    <span>SOOP Plus</span>
+                    <img src="/logo.png" width="160"/>
                 </header>
                 <div style={{
                     display: "flex",
