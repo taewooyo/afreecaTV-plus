@@ -253,16 +253,18 @@ export default function App(props: {
                 justifyContent: "start",
             }}
         >
-            <div>
+            <div
+                style={{
+                    margin: '0 auto',
+                }}
+            >
                 <header
                     className="header"
                     style={{
-                        fontSize: "1.5rem",
-                        fontWeight: "bold",
-                        marginBottom: "10px",
+                        marginBottom: "20px",
                     }}
                 >
-                    <span>SOOP Plus</span>
+                    <img src="/logo.png" width="160"/>
                 </header>
                 <div style={{
                     display: "flex",
@@ -274,9 +276,9 @@ export default function App(props: {
                         id="go-home"
                         style={{
                             marginLeft: "5px",
-                            color: "#000",
+                            color: "#0c0d0e",
                             background: "linear-gradient(#058CFF, #05ACFF, #1FF4EC)",
-                            borderRadius: "15px",
+                            borderRadius: "8px",
                             border: "none",
                             padding: "0.5rem 1rem",
                             fontSize: ".875rem",
@@ -291,9 +293,9 @@ export default function App(props: {
                         id="go-issue"
                         style={{
                             marginLeft: "5px",
-                            color: "#000",
+                            color: "#0c0d0e",
                             background: "linear-gradient(#058CFF, #05ACFF, #1FF4EC)",
-                            borderRadius: "15px",
+                            borderRadius: "8px",
                             border: "none",
                             padding: "0.5rem 1rem",
                             fontSize: ".875rem",
@@ -396,7 +398,7 @@ export default function App(props: {
                             onKeyUp={addNickEnterClick}
                             style={{
                                 border: "0",
-                                borderRadius: "15px",
+                                borderRadius: "8px",
                                 outline: "none",
                                 backgroundColor: "#e9e9e9",
                                 paddingLeft: "10px",
@@ -408,9 +410,9 @@ export default function App(props: {
                             id="add-btn"
                             style={{
                                 marginLeft: "5px",
-                                color: "#000",
+                                color: "#0c0d0e",
                                 background: "linear-gradient(#058CFF, #05ACFF, #1FF4EC)",
-                                borderRadius: "15px",
+                                borderRadius: "8px",
                                 border: "none",
                                 padding: "0.5rem 1rem",
                                 fontSize: ".875rem",
@@ -431,7 +433,7 @@ export default function App(props: {
                             onKeyUp={addIdEnterClick}
                             style={{
                                 border: "0",
-                                borderRadius: "15px",
+                                borderRadius: "8px",
                                 outline: "none",
                                 backgroundColor: "#e9e9e9",
                                 paddingLeft: "10px",
@@ -444,9 +446,9 @@ export default function App(props: {
                             id="add-btn"
                             style={{
                                 marginLeft: "5px",
-                                color: "#000",
+                                color: "#0c0d0e",
                                 background: "linear-gradient(#058CFF, #05ACFF, #1FF4EC)",
-                                borderRadius: "15px",
+                                borderRadius: "8px",
                                 border: "none",
                                 padding: "0.5rem 1rem",
                                 fontSize: ".875rem",

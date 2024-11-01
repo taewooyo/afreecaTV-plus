@@ -318,7 +318,7 @@ function CollectorChange() {
     // tooltip.innerText = "콜렉터 상하변경"
     // tooltip.style.setProperty('transform', 'translate(-80%, 0)');
 
-    const collectorChangeButton = document.createElement('button');
+    const collectorChangeButton = document.createElement('a');
     collectorChangeButton.addEventListener('click', (e) => {
         e.preventDefault()
         try {
@@ -343,10 +343,13 @@ function CollectorChange() {
         } catch (err) {
         }
     });
-    collectorChangeButton.style.setProperty('width', '21px');
-    collectorChangeButton.style.setProperty('height', '21px');
+    collectorChangeButton.style.setProperty('width', '32px');
+    collectorChangeButton.style.setProperty('height', '32px');
+    collectorChangeButton.style.setProperty('display', 'flex');
+    collectorChangeButton.style.setProperty('align-items', 'center');
+    collectorChangeButton.style.setProperty('justify-content', 'center');
     collectorChangeButton.innerHTML =
-        "<svg id=\"Layer_1\" style=\"enable-background:new 0 0 120 120;\" version=\"1.1\" viewBox=\"0 0 120 120\" xml:space=\"preserve\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\"><style type=\"text/css\">\n" +
+        "<svg id=\"Layer_1\" style=\"enable-background:new 0 0 120 120; width:21px; height:21px;\" version=\"1.1\" viewBox=\"0 0 120 120\" xml:space=\"preserve\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\"><style type=\"text/css\">\n" +
         "\t.st0{fill:none;}\n" +
         "\t.st1{fill:#386BFF;}\n" +
         "\t.st2{fill:#5DE88B;}\n" +
@@ -366,6 +369,9 @@ function CollectorChange() {
     // playerItemListUL?.appendChild(li);
     if (cloneNode != null) {
         start?.insertAdjacentElement('beforebegin', cloneNode);
+        
+        // ClassName 제거 - 남아있으면 별풍선 아이콘 생김
+        cloneNode.classList.remove("star")
     }
 }
 
