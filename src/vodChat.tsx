@@ -472,6 +472,12 @@ setTimeout(async () => {
         } else {
 
         }
+        const t = document.getElementById("chatting_area");
+    if (t != null) {
+        qwer.observe(t);
+    }
+    else {
+    }
 }, 600);
 
 chrome.storage.local.onChanged.addListener(async (changes) => {
@@ -640,8 +646,3 @@ const qwer = new ResizeObserver(entries => {
         }
     }
 });
-
-const t = document.getElementById("chatbox_height");
-if (t != null) {
-    qwer.observe(t);
-}
