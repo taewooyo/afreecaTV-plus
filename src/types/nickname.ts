@@ -3,6 +3,6 @@ import { User } from "../model/User";
 
 export interface NicknameProps {
   nick: User[];
-  children: ReactNode;
+  children?: ReactNode;
   onClick: (e: React.MouseEvent<HTMLDivElement>) => void;
 }

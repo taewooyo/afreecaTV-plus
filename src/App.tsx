@@ -1,8 +1,6 @@
 import React, { useRef, useState } from "react";
-import Nickname from "./components/Nickname";
 import Toggle from "./components/Toggle";
 import { User } from "./model/User";
-import Id from "./Id";
 import { ToggleData } from "@/src/model/ToggleData";
 import { ChatCollectorData } from "@/src/model/ChatCollectorData";
 import { ChatSetting } from "@/src/model/ChatSetting";
@@ -14,8 +12,9 @@ import { TopfanBadge } from "@/src/model/TopfanBadge";
 import { Divider } from "@/src/model/Divider";
 import { Highlight } from "@/src/model/Highlight";
 import Header from "./components/Header";
-import GoButton from "./components/GoButton";
 import ButtonGroup from "./components/ButtonGroup";
+import InputForm from "./components/InputForm";
+import FilterList from "./components/FilterList";
 
 export default function App(props: {
   nicks: User[];
@@ -45,95 +44,34 @@ export default function App(props: {
   const [topFanBadge, setTopFanBadge] = useState(props.topfanBadge);
   const [divider, setDivider] = useState(props.divider);
   const [highlight, setHighlight] = useState(props.highlight);
-  const nickInput = useRef<HTMLInputElement>(null);
-  const idInput = useRef<HTMLInputElement>(null);
 
-  const addNickBtnClick = () => {
-    if (!nickInput.current || !nickInput.current.value) return;
+  const handleAddNick = (nickname: string) => {
     const nicknames = nicks.map((user) => user.user);
-    if (nicknames.includes(nickInput.current?.value)) return;
+    // 방어 코드: 닉네임이 비었거나 중복일 경우 처리
+    if (!nickname.trim() || nicknames.includes(nickname)) return;
 
-    // if (nicks.includes(nickInput.current.value)) return;
-    const newNicks = [...nicknames, nickInput.current.value].map(
-      (nickname) => ({ isNickname: true, user: nickname })
-    );
+    const newNicks = [...nicks, { isNickname: true, user: nickname }];
     chrome.storage.local.set({ nicks: newNicks }, () => {
       setNicks(newNicks);
-      if (nickInput.current == null) return;
-      nickInput.current.value = "";
     });
   };
 
-  const addNickEnterClick = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") {
-      if (!nickInput.current || !nickInput.current.value) return;
-      const nicknames = nicks.map((user) => user.user);
-      if (nicknames.includes(nickInput.current?.value)) return;
-
-      // const newNicks = [...nicks, nickInput.current.value];
-      const newNicks = [...nicknames, nickInput.current.value].map(
-        (nickname) => ({ isNickname: true, user: nickname })
-      );
-      chrome.storage.local.set({ nicks: newNicks }, () => {
-        setNicks(newNicks);
-        if (nickInput.current == null) return;
-        nickInput.current.value = "";
-      });
-    }
-  };
-
-  const addIdBtnClick = () => {
-    if (!idInput.current || !idInput.current.value) return;
+  const handleAddId = (id: string) => {
     const userIds = ids.map((user) => user.user);
-    if (userIds.includes(idInput.current?.value)) return;
+    if (!id.trim() || userIds.includes(id)) return;
 
-    // if (nicks.includes(nickInput.current.value)) return;
-    const newIds = [...userIds, idInput.current.value].map((id) => ({
-      isNickname: false,
-      user: id,
-    }));
-    chrome.storage.local.set({ ids: newIds }, () => {
-      setIds(newIds);
-      if (idInput.current == null) return;
-      idInput.current.value = "";
-    });
+    const newIds = [...ids, { isNickname: false, user: id }];
+    chrome.storage.local.set({ ids: newIds }, () => setIds(newIds));
   };
 
-  const addIdEnterClick = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") {
-      if (!idInput.current || !idInput.current.value) return;
-      const userIds = ids.map((user) => user.user);
-      if (userIds.includes(idInput.current?.value)) return;
-
-      // const newNicks = [...nicks, nickInput.current.value];
-      const newIds = [...userIds, idInput.current.value].map((id) => ({
-        isNickname: false,
-        user: id,
-      }));
-      chrome.storage.local.set({ ids: newIds }, () => {
-        setIds(newIds);
-        if (idInput.current == null) return;
-        idInput.current.value = "";
-      });
-    }
+  const handleNickClick = (nickname: string) => {
+    const newNicks = nicks.filter((user) => user.user !== nickname);
+    chrome.storage.local.set({ nicks: newNicks }, () => setNicks(newNicks));
   };
 
-  const nicknameClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    const newNicks = nicks.filter(
-      (item) => item.user !== e.currentTarget.innerHTML
-    );
-    chrome.storage.local.set({ nicks: newNicks }, () => {
-      setNicks(newNicks);
-    });
-  };
-
-  const idClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    const newIds = ids.filter(
-      (item) => item.user !== e.currentTarget.innerHTML
-    );
-    chrome.storage.local.set({ ids: newIds }, () => {
-      setIds(newIds);
-    });
+  const handleIdClick = (id: string) => {
+    const newIds = ids.filter((user) => user.user !== id);
+    chrome.storage.local.set({ ids: newIds }, () => setIds(newIds));
   };
 
   const changeToggle = (text: string) => {
@@ -325,131 +263,15 @@ export default function App(props: {
               value={toggle.user}
             />
           </ul>
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              flexDirection: "row",
-              marginBottom: "5px",
-            }}
-          >
-            <input
-              ref={nickInput}
-              id="nickname-input"
-              type="text"
-              placeholder="닉네임을 입력하세요"
-              onKeyUp={addNickEnterClick}
-              style={{
-                border: "0",
-                borderRadius: "8px",
-                outline: "none",
-                backgroundColor: "#e9e9e9",
-                paddingLeft: "10px",
-                paddingRight: "10px",
-              }}
-            />
-            <button
-              onClick={addNickBtnClick}
-              id="add-btn"
-              style={{
-                marginLeft: "5px",
-                color: "#0c0d0e",
-                background: "linear-gradient(#058CFF, #05ACFF, #1FF4EC)",
-                borderRadius: "8px",
-                border: "none",
-                padding: "0.5rem 1rem",
-                fontSize: ".875rem",
-                fontWeight: "700",
-                textDecoration: "auto",
-                cursor: "pointer",
-              }}
-            >
-              닉네임 추가
-            </button>
-          </div>
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              flexDirection: "row",
-            }}
-          >
-            <input
-              ref={idInput}
-              id="id-input"
-              type="text"
-              placeholder="아이디를 입력하세요"
-              onKeyUp={addIdEnterClick}
-              style={{
-                border: "0",
-                borderRadius: "8px",
-                outline: "none",
-                backgroundColor: "#e9e9e9",
-                paddingLeft: "10px",
-                paddingRight: "10px",
-              }}
-            />
-
-            <button
-              onClick={addIdBtnClick}
-              id="add-btn"
-              style={{
-                marginLeft: "5px",
-                color: "#0c0d0e",
-                background: "linear-gradient(#058CFF, #05ACFF, #1FF4EC)",
-                borderRadius: "8px",
-                border: "none",
-                padding: "0.5rem 1rem",
-                fontSize: ".875rem",
-                fontWeight: "700",
-                textDecoration: "auto",
-                cursor: "pointer",
-              }}
-            >
-              아이디 추가
-            </button>
-          </div>
+          <InputForm placeholder="닉네임을 입력하세요" onAdd={handleAddNick} />
+          <InputForm placeholder="아이디를 입력하세요" onAdd={handleAddId} />
           <div className="nickname-container">
-            <div className="nicknames">
-              <Nickname nick={nicks} onClick={nicknameClick}>
-                <h2
-                  style={{
-                    color: "#fff",
-                    width: "100%",
-                    margin: "0",
-                    marginTop: "10px",
-                    marginBottom: "0.25rem",
-                    fontSize: "18px",
-                    textAlign: "start",
-                    fontWeight: "bold",
-                  }}
-                >
-                  필터링 리스트
-                </h2>
-                <p
-                  style={{
-                    margin: "0",
-                    fontSize: "14px",
-                    textAlign: "start",
-                  }}
-                >
-                  🌳 필터링 제거 방법
-                </p>
-                <p
-                  style={{
-                    margin: "0",
-                    color: "#afafaf",
-                    textAlign: "start",
-                    fontSize: "12px",
-                  }}
-                >
-                  닉네임 혹은 아이디를 클릭
-                </p>
-              </Nickname>
-            </div>
-            <div className="nicknames">
-              <Id userId={ids} onClick={idClick}></Id>
-            </div>
+            <FilterList
+              nicks={nicks}
+              ids={ids}
+              onNickClick={handleNickClick}
+              onIdClick={handleIdClick}
+            />
           </div>
         </div>
       </div>
