@@ -1,10 +1,10 @@
-import { useRef } from "react";
+import React, { useRef } from "react";
 import { AddButton, FormContainer, StyledInput } from "./style";
 
 // Interfaces
 interface InputFormProps {
   placeholder: string;
-  onAdd: (value: string) => void;
+  onAdd: (value: string, resetInput: () => void) => void;
 }
 
 interface InputEvent extends React.KeyboardEvent<HTMLInputElement> {
@@ -16,8 +16,11 @@ const InputForm = ({ placeholder, onAdd }: InputFormProps) => {
 
   const handleAdd = () => {
     if (!inputRef.current || !inputRef.current.value) return;
-    onAdd(inputRef.current.value);
-    inputRef.current.value = "";
+    onAdd(inputRef.current.value, () => {
+      if (inputRef.current) {
+        inputRef.current.value = ""; // 입력 필드 초기화
+      }
+    });
   };
 
   const handleEnterPress = (e: InputEvent) => {

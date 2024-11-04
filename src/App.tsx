@@ -45,23 +45,31 @@ export default function App(props: {
   const [divider, setDivider] = useState(props.divider);
   const [highlight, setHighlight] = useState(props.highlight);
 
-  const handleAddNick = (nickname: string) => {
+  const handleAddNick = (nickname: string, resetInput: () => void) => {
     const nicknames = nicks.map((user) => user.user);
     // 방어 코드: 닉네임이 비었거나 중복일 경우 처리
-    if (!nickname.trim() || nicknames.includes(nickname)) return;
+    if (!nickname.trim() || nicknames.includes(nickname)) {
+      return;
+    }
 
     const newNicks = [...nicks, { isNickname: true, user: nickname }];
     chrome.storage.local.set({ nicks: newNicks }, () => {
       setNicks(newNicks);
+      resetInput();
     });
   };
 
-  const handleAddId = (id: string) => {
+  const handleAddId = (id: string, resetInput: () => void) => {
     const userIds = ids.map((user) => user.user);
-    if (!id.trim() || userIds.includes(id)) return;
+    if (!id.trim() || userIds.includes(id)) {
+      return;
+    }
 
     const newIds = [...ids, { isNickname: false, user: id }];
-    chrome.storage.local.set({ ids: newIds }, () => setIds(newIds));
+    chrome.storage.local.set({ ids: newIds }, () => {
+      setIds(newIds);
+      resetInput(); // 성공 시 입력 필드 초기화
+    });
   };
 
   const handleNickClick = (nickname: string) => {
