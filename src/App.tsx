@@ -14,6 +14,8 @@ import { TopfanBadge } from "@/src/model/TopfanBadge";
 import { Divider } from "@/src/model/Divider";
 import { Highlight } from "@/src/model/Highlight";
 import Header from "./components/Header";
+import GoButton from "./components/GoButton";
+import ButtonGroup from "./components/ButtonGroup";
 
 export default function App(props: {
   nicks: User[];
@@ -226,22 +228,6 @@ export default function App(props: {
     });
   };
 
-  const onClickHome = () => {
-    window.open("https://www.sooplive.co.kr", "_blank");
-  };
-
-  const onClickIssue = () => {
-    window.open("https://github.com/taewooyo/afreecaTV-plus/issues", "_blank");
-  };
-
-  const onClickChannel = (e: React.MouseEvent<HTMLDivElement>, url: string) => {
-    window.open(url, "_blank");
-  };
-
-  const onClickLogin = () => {
-    window.open("https://login.afreecatv.com/afreeca/login.php", "_blank");
-  };
-
   return (
     <div
       className="wrapper"
@@ -260,50 +246,7 @@ export default function App(props: {
         }}
       >
         <Header />
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            marginBottom: "10px",
-          }}
-        >
-          <button
-            onClick={onClickHome}
-            id="go-home"
-            style={{
-              marginLeft: "5px",
-              color: "#0c0d0e",
-              background: "linear-gradient(#058CFF, #05ACFF, #1FF4EC)",
-              borderRadius: "8px",
-              border: "none",
-              padding: "0.5rem 1rem",
-              fontSize: ".875rem",
-              fontWeight: "700",
-              textDecoration: "auto",
-              cursor: "pointer",
-            }}
-          >
-            SOOP 이동하기
-          </button>
-          <button
-            onClick={onClickIssue}
-            id="go-issue"
-            style={{
-              marginLeft: "5px",
-              color: "#0c0d0e",
-              background: "linear-gradient(#058CFF, #05ACFF, #1FF4EC)",
-              borderRadius: "8px",
-              border: "none",
-              padding: "0.5rem 1rem",
-              fontSize: ".875rem",
-              fontWeight: "700",
-              textDecoration: "auto",
-              cursor: "pointer",
-            }}
-          >
-            버그 제보
-          </button>
-        </div>
+        <ButtonGroup />
         <div>
           <ul>
             <Toggle
