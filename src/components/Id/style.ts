@@ -1,11 +1,12 @@
 import styled from "styled-components";
 
-export const NicknameContainer = styled.div`
+export const IdContainer = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 5px;`;
+  gap: 5px;
+`;
 
-export const NicknameItem = styled.div`
+export const IdItem = styled.div`
   color: #000;
   border-radius: 5px;
   cursor: pointer;
