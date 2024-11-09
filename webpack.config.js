@@ -32,19 +32,19 @@ module.exports = {
             },
             {
                 test: /\.css$/i,
-                use: ["style-loader", "css-loader", "sass-loader"],
+                use: ["style-loader", { loader: "css-loader", options: { url: false } }],
             },
             {
-                test: /\.(png|svg)$/,
+                test: /\.s[ac]ss$/i,
                 use: [
-                    {
-                        loader: "file-loader",
-                        options: {
-                            name: "images/[name].[ext]?[hash]",
-                        },
-                    },
+                  // Creates `style` nodes from JS strings
+                  "style-loader",
+                  // Translates CSS into CommonJS
+                  "css-loader",
+                  // Compiles Sass to CSS
+                  "sass-loader",
                 ],
-            },
+              },
         ],
     },
     resolve: {

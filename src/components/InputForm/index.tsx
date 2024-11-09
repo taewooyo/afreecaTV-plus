@@ -1,8 +1,8 @@
 import React, { useRef } from "react";
-import { AddButton, FormContainer, StyledInput } from "./style";
 
 // Interfaces
 interface InputFormProps {
+  name: string;
   placeholder: string;
   onAdd: (value: string, resetInput: () => void) => void;
 }
@@ -11,7 +11,7 @@ interface InputEvent extends React.KeyboardEvent<HTMLInputElement> {
   target: HTMLInputElement;
 }
 
-const InputForm = ({ placeholder, onAdd }: InputFormProps) => {
+const InputForm = ({ name,placeholder, onAdd }: InputFormProps) => {
   const inputRef = useRef<HTMLInputElement>(null);
 
   const handleAdd = () => {
@@ -30,16 +30,28 @@ const InputForm = ({ placeholder, onAdd }: InputFormProps) => {
   };
 
   return (
-    <FormContainer>
-      <StyledInput
+    <fieldset role="group">
+      <input 
         ref={inputRef}
         type="text"
         placeholder={placeholder}
         onKeyUp={handleEnterPress}
       />
-      <AddButton onClick={handleAdd}>추가</AddButton>
-    </FormContainer>
+      <button onClick={handleAdd}>{name} 추가</button>
+    </fieldset>
   );
+
+  // return (
+  //   <FormContainer>
+  //     <StyledInput
+  //       ref={inputRef}
+  //       type="text"
+  //       placeholder={placeholder}
+  //       onKeyUp={handleEnterPress}
+  //     />
+  //     <AddButton onClick={handleAdd}>추가</AddButton>
+  //   </FormContainer>
+  // );
 };
 
 export default InputForm;
