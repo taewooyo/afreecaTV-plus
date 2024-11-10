@@ -1,5 +1,5 @@
 import React from 'react';
-import App from './App';
+
 import {createRoot} from 'react-dom/client';
 import '../public/manifest.json';
 import {
@@ -17,6 +17,9 @@ import {
     getTopfanBadge
 } from './getStorageData';
 import {FavoriteChannelData} from "@/src/model/FavoriteChannelData";
+
+import './style.scss';
+import App from './App';
 
 (async () => {
     try {

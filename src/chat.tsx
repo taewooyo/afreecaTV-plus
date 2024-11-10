@@ -133,7 +133,7 @@ const callback = (mutationList: MutationRecord[], observer: MutationObserver) =>
                 if (grade == null) return;
 
                 // 구독자 뱃지 제거
-                if (subscribeBadge.isUse) {
+                if (subscribeBadge?.isUse) {
                     const thumb = (node as HTMLElement).querySelector('.thumb');
                     if (thumb != null) {
                         (thumb as HTMLElement).style.setProperty("display", "none");
@@ -146,7 +146,7 @@ const callback = (mutationList: MutationRecord[], observer: MutationObserver) =>
                 }
 
                 // 열혈팬 뱃지 제거
-                if (topFanBadge.isUse) {
+                if (topFanBadge?.isUse) {
                     const topFan = (node as HTMLElement).querySelector('.grade-badge-vip');
                     if (topFan != null) {
                         (topFan as HTMLElement).style.setProperty("display", "none");
@@ -159,7 +159,7 @@ const callback = (mutationList: MutationRecord[], observer: MutationObserver) =>
                 }
 
                 // 팬 뱃지 제거
-                if (fanBadge.isUse) {
+                if (fanBadge?.isUse) {
                     const fan = (node as HTMLElement).querySelector('.grade-badge-fan');
                     if (fan != null) {
                         (fan as HTMLElement).style.setProperty("display", "none");
@@ -172,7 +172,7 @@ const callback = (mutationList: MutationRecord[], observer: MutationObserver) =>
                 }
 
                 // 서포터 뱃지 제거
-                if (supportBadge.isUse) {
+                if (supportBadge?.isUse) {
                     const support = (node as HTMLElement).querySelector('.grade-badge-support');
                     if (support != null) {
                         (support as HTMLElement).style.setProperty("display", "none");
@@ -184,7 +184,7 @@ const callback = (mutationList: MutationRecord[], observer: MutationObserver) =>
                     }
                 }
 
-                if (divider.isUse) {
+                if (divider?.isUse) {
                     const author = (node as HTMLElement).querySelector('.author')
                     if (author != null) {
                         const text = (author as HTMLElement).innerText;
@@ -203,7 +203,7 @@ const callback = (mutationList: MutationRecord[], observer: MutationObserver) =>
 
                 if (filter(nickName, rawUserId, grade) && filterArea != null) {
                     (filterArea as HTMLElement).appendChild(node.cloneNode(true));
-                    if (highlight.isUse) {
+                    if (highlight?.isUse) {
                         (container as HTMLElement).style.borderLeft = "4px solid rgb(255, 193, 7)";
                         (container as HTMLElement).style.paddingLeft = "10px";
                         (container as HTMLElement).style.marginLeft = "-16px";
