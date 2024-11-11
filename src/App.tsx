@@ -41,8 +41,7 @@ export default function App(props: IProps) {
           <a href="https://www.sooplive.co.kr" target="_blank">soop 바로가기</a>
         </div>
       </header>
-      <Setting />
-      <ChatOptions {...props} wrapStyle={{ marginTop: '1rem' }} />
+      <ChatOptions {...props} />
       <CollectorOptions {...props} wrapStyle={{ marginTop: '1rem' }} />
       <footer>
         <b>2024 Soop Plus Project</b>
