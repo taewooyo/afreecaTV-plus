@@ -7,6 +7,7 @@ import { ChatCollectorData } from "./model/ChatCollectorData";
 import { User } from "./model/User";
 import InputForm from "./components/InputForm";
 import styled from "styled-components";
+import Setting from "./Setting";
 
 interface IProps {
   collector: ChatCollectorData;
@@ -161,6 +162,7 @@ const CollectorOptions = ({ wrapStyle, ...props }: IProps) => {
           placeholder="아이디를 입력하세요"
           onAdd={handleAddId}
         />
+        <Setting />
         <div>
           <details
             role="button"
