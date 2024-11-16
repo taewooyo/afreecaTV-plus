@@ -259,16 +259,11 @@ async function initLocalChatContainer() {
 }
 
 function CaptureButton() {
-    const playerItemList = document.querySelector('.player_item_list');
-    const playerItemListUL = playerItemList?.querySelector('ul');
-    const li = document.createElement('li')
-    li.classList.add('share');
-    const tooltip = document.createElement('div');
-    tooltip.innerText = "방송 캡처"
-    const span = document.createElement('span')
-    span.innerText = "방송 캡처";
-
-    const captureButton = document.createElement('button');
+    const chat_item_list = document.querySelector('.chat_item_list');
+    const item_box = chat_item_list?.querySelector('ul');
+    const start = item_box?.querySelector('li.star') as HTMLElement;
+    const cloneNode = start?.cloneNode(false) as HTMLElement;
+    const captureButton = document.createElement('a');
     captureButton.addEventListener('click', (e) => {
         e.preventDefault()
         try {
@@ -290,17 +285,27 @@ function CaptureButton() {
         } catch (err) {
         }
     });
-    captureButton.style.setProperty('width', '21px');
-    captureButton.style.setProperty('height', '21px');
+    captureButton.style.setProperty('width', '32px');
+    captureButton.style.setProperty('height', '32px');
+    captureButton.style.setProperty('display', 'flex');
+    captureButton.style.setProperty('align-items', 'center');
+    captureButton.style.setProperty('justify-content', 'center');
     captureButton.innerHTML =
-        "<svg viewBox=\"0 0 24 24\" xmlns=\"http://www.w3.org/2000/svg\"> <path d=\"M3,9A1,1,0,0,0,4,8V5A1,1,0,0,1,5,4H8A1,1,0,0,0,8,2H5A3,3,0,0,0,2,5V8A1,1,0,0,0,3,9ZM8,20H5a1,1,0,0,1-1-1V16a1,1,0,0,0-2,0v3a3,3,0,0,0,3,3H8a1,1,0,0,0,0-2ZM12,8a4,4,0,1,0,4,4A4,4,0,0,0,12,8Zm0,6a2,2,0,1,1,2-2A2,2,0,0,1,12,14ZM19,2H16a1,1,0,0,0,0,2h3a1,1,0,0,1,1,1V8a1,1,0,0,0,2,0V5A3,3,0,0,0,19,2Zm2,13a1,1,0,0,0-1,1v3a1,1,0,0,1-1,1H16a1,1,0,0,0,0,2h3a3,3,0,0,0,3-3V16A1,1,0,0,0,21,15Z\" fill=\"#6563ff\"/> </svg>"
+        "<svg viewBox=\"0 0 24 24\" xmlns=\"http://www.w3.org/2000/svg\" style=\"enable-background:new 0 0 120 120; width:21px; height:21px;\"> <path d=\"M3,9A1,1,0,0,0,4,8V5A1,1,0,0,1,5,4H8A1,1,0,0,0,8,2H5A3,3,0,0,0,2,5V8A1,1,0,0,0,3,9ZM8,20H5a1,1,0,0,1-1-1V16a1,1,0,0,0-2,0v3a3,3,0,0,0,3,3H8a1,1,0,0,0,0-2ZM12,8a4,4,0,1,0,4,4A4,4,0,0,0,12,8Zm0,6a2,2,0,1,1,2-2A2,2,0,0,1,12,14ZM19,2H16a1,1,0,0,0,0,2h3a1,1,0,0,1,1,1V8a1,1,0,0,0,2,0V5A3,3,0,0,0,19,2Zm2,13a1,1,0,0,0-1,1v3a1,1,0,0,1-1,1H16a1,1,0,0,0,0,2h3a3,3,0,0,0,3-3V16A1,1,0,0,0,21,15Z\" fill=\"#6563ff\"/> </svg>"
     const updatedSvg = captureButton.querySelector('svg')
     if (updatedSvg == null) return;
+    // 채팅 하단 영역 z-index 변경
+    const chatActionBox = document.getElementById("actionbox");
+    if (chatActionBox == null) return;
+    chatActionBox.style.setProperty("z-index", "110");
+
     updatedSvg.style.setProperty('vertical-align', 'middle');
-    captureButton.appendChild(span);
-    li.appendChild(captureButton);
-    li.appendChild(tooltip);
-    playerItemListUL?.appendChild(li);
+    captureButton.setAttribute('tip', '화면캡쳐');
+    cloneNode.appendChild(captureButton);
+    if (cloneNode != null) {
+        start?.insertAdjacentElement('beforebegin', cloneNode);
+        cloneNode.classList.remove("star")
+    }
 }
 
 function CollectorChange() {
@@ -493,7 +498,7 @@ window.addEventListener('load', async () => {
     // if (t != null) {
     //     resizeObserver.observe(t);
     // }
-    // CaptureButton();
+    CaptureButton();
     CollectorChange();
     const observer = new MutationObserver(callback);
     if (chatArea) {
