@@ -38,12 +38,18 @@ let supportBadge: SupportBadge;
 let divider: Divider;
 let highlight: Highlight;
 
+let nicksMap: Map<string, boolean> = new Map();
+let idsSet: Set<string> = new Set();
+let isUserScrolling = false;
+
 async function updateNickname() {
     chrome.storage.local.get('nicks').then((res: { [p: string]: User[] }) => {
         if (res.nicks) {
             nicks = res.nicks;
+            nicksMap = new Map(nicks.map(user => [user.user, user.isNickname]));
         } else {
             nicks = [];
+            nicksMap = new Map();
         }
     })
 }
@@ -52,8 +58,10 @@ async function updateId() {
     chrome.storage.local.get('ids').then((res: { [p: string]: User[] }) => {
         if (res.ids) {
             ids = res.ids;
+            idsSet = new Set(ids.filter(user => !user.isNickname).map(user => user.user));
         } else {
             ids = [];
+            idsSet = new Set();
         }
     })
 }
@@ -76,144 +84,105 @@ async function updateToggle() {
 }
 
 function filter(nickname: string, rawUserId: string, grade: string): boolean {
-    let flag = 0;
     const lastIndex = rawUserId.indexOf('(');
-    let userId: string;
-    if (lastIndex == -1) {
-        userId = rawUserId
-    } else {
-        userId = rawUserId.substring(0, lastIndex);
-    }
+    const userId = lastIndex === -1 ? rawUserId : rawUserId.substring(0, lastIndex);
 
-    nicks.forEach((user: User) => {
-        if (user.isNickname && user.user == nickname) {
-            flag = 1;
-            return;
-        }
-    })
-    ids.forEach((user: User) => {
-        if (!user.isNickname && user.user == userId) {
-            flag = 1;
-            return;
-        }
-    })
-    if (grade == "bj" && toggle.streamer) {
-        flag = 1;
-    } else if (grade == "manager" && toggle.manager) {
-        flag = 1;
-    } else if (grade == "topfan" && toggle.topfan) {
-        flag = 1;
-    } else if (grade == "gudok" && toggle.gudok) {
-        flag = 1;
-    } else if (grade == "fan" && toggle.fan) {
-        flag = 1;
-    } else if (grade == "user" && toggle.user) {
-        flag = 1;
-    }
-    return flag == 1;
+    if (nicksMap.has(nickname) && nicksMap.get(nickname)) return true;
+    if (idsSet.has(userId)) return true;
+    if (grade === "bj" && toggle.streamer) return true;
+    if (grade === "manager" && toggle.manager) return true;
+    if (grade === "topfan" && toggle.topfan) return true;
+    if (grade === "gudok" && toggle.gudok) return true;
+    if (grade === "fan" && toggle.fan) return true;
+    if (grade === "user" && toggle.user) return true;
+    return false;
 }
 
 let chatArea: Element | null
 const callback = (mutationList: MutationRecord[], observer: MutationObserver) => {
-    mutationList.forEach((mutation: MutationRecord) => {
-        mutation.addedNodes.forEach((node) => {
-            if (node.parentNode == null) return;
-            if (node.nodeName == 'DIV') {
-                const container = (node as HTMLElement).querySelector('.message-container')
-                if (container == null) return
-                const user = container.querySelector('.username')
-                if (user == null) return
-                const userButton = user.querySelector('button')
-                if (userButton == null) return
-                const rawUserId = userButton.getAttribute('user_id')
-                const nickName = userButton.getAttribute('user_nick')
-                const grade = userButton.getAttribute('grade')
-                if (rawUserId == null) return;
-                if (nickName == null) return;
-                if (grade == null) return;
+    requestAnimationFrame(() => {
+        const fragment = document.createDocumentFragment();
+        mutationList.forEach((mutation: MutationRecord) => {
+            mutation.addedNodes.forEach((node) => {
+                if (node.parentNode == null) return;
+                if (node.nodeName === 'DIV') {
+                    const container = (node as HTMLElement).querySelector('.message-container');
+                    if (container == null) return;
+                    const user = container.querySelector('.username');
+                    if (user == null) return;
+                    const userButton = user.querySelector('button');
+                    if (userButton == null) return;
+                    const rawUserId = userButton.getAttribute('user_id');
+                    const nickName = userButton.getAttribute('user_nick');
+                    const grade = userButton.getAttribute('grade');
+                    if (rawUserId == null || nickName == null || grade == null) return;
 
-                // 구독자 뱃지 제거
-                if (subscribeBadge?.isUse) {
+                    // 구독자 뱃지 제거
                     const thumb = (node as HTMLElement).querySelector('.thumb');
                     if (thumb != null) {
-                        (thumb as HTMLElement).style.setProperty("display", "none");
+                        (thumb as HTMLElement).style.display = subscribeBadge?.isUse ? "none" : "inline-block";
                     }
-                } else {
-                    const thumb = (node as HTMLElement).querySelector('.thumb');
-                    if (thumb != null) {
-                        (thumb as HTMLElement).style.setProperty("display", "inline-block");
-                    }
-                }
 
-                // 열혈팬 뱃지 제거
-                if (topFanBadge?.isUse) {
+                    // 열혈팬 뱃지 제거
                     const topFan = (node as HTMLElement).querySelector('.grade-badge-vip');
                     if (topFan != null) {
-                        (topFan as HTMLElement).style.setProperty("display", "none");
+                        (topFan as HTMLElement).style.display = topFanBadge?.isUse ? "none" : "";
                     }
-                } else {
-                    const topFan = (node as HTMLElement).querySelector('.grade-badge-vip');
-                    if (topFan != null) {
-                        (topFan as HTMLElement).style.removeProperty("display");
-                    }
-                }
 
-                // 팬 뱃지 제거
-                if (fanBadge?.isUse) {
+                    // 팬 뱃지 제거
                     const fan = (node as HTMLElement).querySelector('.grade-badge-fan');
                     if (fan != null) {
-                        (fan as HTMLElement).style.setProperty("display", "none");
+                        (fan as HTMLElement).style.display = fanBadge?.isUse ? "none" : "";
                     }
-                } else {
-                    const fan = (node as HTMLElement).querySelector('.grade-badge-fan');
-                    if (fan != null) {
-                        (fan as HTMLElement).style.removeProperty("display");
-                    }
-                }
 
-                // 서포터 뱃지 제거
-                if (supportBadge?.isUse) {
+                    // 서포터 뱃지 제거
                     const support = (node as HTMLElement).querySelector('.grade-badge-support');
                     if (support != null) {
-                        (support as HTMLElement).style.setProperty("display", "none");
+                        (support as HTMLElement).style.display = supportBadge?.isUse ? "none" : "";
                     }
-                } else {
-                    const support = (node as HTMLElement).querySelector('.grade-badge-support');
-                    if (support != null) {
-                        (support as HTMLElement).style.removeProperty("display");
-                    }
-                }
 
-                if (divider?.isUse) {
-                    const author = (node as HTMLElement).querySelector('.author')
+                    // 채팅 분리선
+                    const author = (node as HTMLElement).querySelector('.author');
                     if (author != null) {
-                        const text = (author as HTMLElement).innerText;
-                        (author as HTMLElement).innerText = text + " : ";
-                    }
-                } else {
-                    const author = (node as HTMLElement).querySelector('.author')
-                    if (author != null) {
-                        const text = (author as HTMLElement).innerText;
-                        const index = text.indexOf(" : ");
-                        if (index != -1) {
-                            (author as HTMLElement).innerText = text.substring(index);
+                        let text = (author as HTMLElement).innerText;
+                        if (divider?.isUse) {
+                            (author as HTMLElement).innerText = text + " : ";
+                        } else {
+                            const index = text.indexOf(" : ");
+                            if (index !== -1) {
+                                (author as HTMLElement).innerText = text.substring(index);
+                            }
                         }
                     }
-                }
 
-                if (filter(nickName, rawUserId, grade) && filterArea != null) {
-                    (filterArea as HTMLElement).appendChild(node.cloneNode(true));
-                    if (highlight?.isUse) {
-                        (container as HTMLElement).style.borderLeft = "4px solid rgb(255, 193, 7)";
-                        (container as HTMLElement).style.paddingLeft = "10px";
-                        (container as HTMLElement).style.marginLeft = "-16px";
+                    if (filter(nickName, rawUserId, grade) && filterArea != null) {
+                        const clonedNode = node.cloneNode(true);
+                        if (highlight?.isUse) {
+                            const clonedContainer = (clonedNode as HTMLElement).querySelector('.message-container') as HTMLElement;
+                            clonedContainer.style.borderLeft = "4px solid rgb(255, 193, 7)";
+                            clonedContainer.style.paddingLeft = "10px";
+                            clonedContainer.style.marginLeft = "-16px";
+                        }
+                        fragment.appendChild(clonedNode);
                     }
-                    (filterArea as HTMLElement).scrollTop = filterArea.scrollHeight;
+                }
+            });
+        });
+        if (filterArea) {
+            filterArea.appendChild(fragment);
+            while (filterArea.children.length > 500) {
+                if (filterArea.firstChild) {
+                    filterArea.removeChild(filterArea.firstChild);
+                } else {
+                    break;
                 }
             }
-        })
-    })
-}
+            if (!isUserScrolling) {
+                filterArea.scrollTop = filterArea.scrollHeight; // 스크롤 위치 복원
+            }
+        }
+    });
+};
 
 let filterArea: HTMLDivElement;
 
@@ -232,6 +201,14 @@ async function initLocalChatContainer() {
     container.style.setProperty('width', '100%');
     container.style.setProperty('height', v + 'px');
     container.style.setProperty('will-change', 'scroll-position');
+    
+    filterArea?.addEventListener('scroll', () => {
+        isUserScrolling = true; // 사용자 스크롤 시작
+    // 스크롤이 맨 아래에 도달했는지 확인
+    if (filterArea.scrollHeight - filterArea.scrollTop - filterArea.clientHeight < 100) { // 10은 임계값 (조정 가능)
+        isUserScrolling = false; // 맨 아래 도달 시 플래그 초기화
+    }
+    });
 
     chatArea.classList.add('live-area');
     filterArea.classList.add('filter-area');
